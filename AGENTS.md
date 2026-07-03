@@ -1,3 +1,79 @@
+# Inventory App - Agent Instructions
+
+Instructions for all AI coding agents (Claude Code, Cursor, Copilot) working on this project.
+
+## Project Overview
+
+Inventory management web app for PT Telkomsel. Laravel 13 + Breeze (Blade/Alpine/Tailwind) with PostgreSQL via Supabase. Built as an internship selection challenge.
+
+Full project context, schema, and test accounts are documented in `CLAUDE.md`. Database schema is defined in `schema.dbml`.
+
+## Do
+
+- Use Form Request classes for all validation (never validate inline in controllers)
+- Use Eloquent relationships and scopes, not raw joins
+- Use route model binding in controllers
+- Follow existing Blade component patterns in `resources/views/components/`
+- Support dark mode on all views (Tailwind `dark:` prefix)
+- Follow the design system defined in `design.md`
+- Write descriptive commits in conventional format: `feat:`, `fix:`, `refactor:`, `docs:`
+- Use enum values consistently: product_condition (`baik`, `rusak_ringan`, `rusak_berat`), borrowing_status (`dipinjam`, `dikembalikan`, `terlambat`)
+- Keep controllers thin; extract complex business logic into service classes
+- Use named routes and the `route()` helper for all URL generation
+- Run `vendor/bin/pint --dirty --format agent` after modifying PHP files
+
+## Don't
+
+- Don't use `DB::raw()` or raw queries unless necessary for aggregate reports
+- Don't create new migration files to alter existing tables during initial development; edit the original migration and run `migrate:fresh --seed`
+- Don't hardcode role names as strings in controllers; reference `Role::ADMIN`, `Role::STAFF`, `Role::MANAGER` constants
+- Don't skip Form Request validation for any store/update action
+- Don't add composer or npm packages without developer approval
+- Don't modify `.env` or `.env.example` without asking
+- Don't create documentation files unless explicitly requested
+- Don't create verification scripts or tinker commands when tests cover the same functionality
+
+## Database
+
+- PostgreSQL via Supabase, connection pooler on port 6543
+- Schema defined in `schema.dbml` (root directory)
+- Foreign keys use `constrained()` with appropriate `cascadeOnDelete()` or `nullOnDelete()`
+- Enum columns for `condition` and `status` fields
+- When stock changes (borrow/return), update `products.stock` within a database transaction
+
+## Auth & Roles
+
+- Laravel Breeze handles auth scaffolding (login, register, forgot password, profile)
+- `RoleMiddleware` checks `$user->role->name` against allowed roles
+- Three roles: admin (full access), staff (products + borrowings), manager (view-only)
+- Route groups protected by `middleware(['role:admin'])`, `middleware(['role:admin,staff'])`, etc.
+- Sidebar and navigation items rendered conditionally based on authenticated user's role
+
+## API
+
+- REST API routes in `routes/api.php` with prefix `/api/v1`
+- Protected via Sanctum token authentication
+- Use Eloquent API Resource classes for response formatting
+- Consistent JSON response structure: `{ "data": ..., "message": "...", "status": 200 }`
+
+## Frontend & Styling
+
+- Refer to `design.md` for UI decisions, color palette, and component patterns
+- Tailwind CSS with dark mode (class strategy, toggle via Alpine.js)
+- Alpine.js for client-side interactivity (modals, dropdowns, toggles, filters)
+- Chart.js for dashboard charts (borrowing trends per month)
+- Use Blade components (`x-component`) over `@include` where possible
+
+## Testing
+
+- PHPUnit for all tests (not Pest)
+- Use model factories with custom states for test data setup
+- Feature tests for controller actions, unit tests for service/helper logic
+- Run specific test: `php artisan test --compact --filter=testName`
+- Run all: `php artisan test --compact`
+
+---
+
 <laravel-boost-guidelines>
 === foundation rules ===
 

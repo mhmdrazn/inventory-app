@@ -1,0 +1,99 @@
+// Inventory Management System - PT Telkomsel
+// PostgreSQL via Supabase
+
+Table roles {
+  id bigint [pk, increment]
+  name varchar [unique, not null, note: 'admin | staff | manager']
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table users {
+  id bigint [pk, increment]
+  role_id bigint [ref: > roles.id, note: 'nullable, null on delete']
+  name varchar [not null]
+  email varchar [unique, not null]
+  email_verified_at timestamp
+  password varchar [not null]
+  remember_token varchar
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    role_id
+  }
+}
+
+Table categories {
+  id bigint [pk, increment]
+  name varchar [unique, not null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table products {
+  id bigint [pk, increment]
+  code varchar [unique, not null, note: 'Kode barang, auto-generate atau manual']
+  name varchar [not null]
+  category_id bigint [ref: > categories.id, not null, note: 'cascade on delete']
+  stock integer [not null, default: 0]
+  location varchar [note: 'nullable, lokasi penyimpanan']
+  condition product_condition [not null, default: 'baik', note: 'baik | rusak_ringan | rusak_berat']
+  image varchar [note: 'nullable, path ke storage']
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    category_id
+    code
+  }
+}
+
+Table borrowings {
+  id bigint [pk, increment]
+  user_id bigint [ref: > users.id, not null, note: 'user yang menginput peminjaman, cascade on delete']
+  approved_by bigint [ref: > users.id, note: 'nullable, admin/manager yang approve, null on delete']
+  borrower_name varchar [not null, note: 'nama peminjam (bisa bukan user sistem)']
+  status borrowing_status [not null, default: 'dipinjam', note: 'dipinjam | dikembalikan | terlambat']
+  borrowed_at date [not null]
+  due_at date [not null]
+  returned_at date [note: 'nullable, diisi saat pengembalian']
+  notes text [note: 'nullable']
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    user_id
+    status
+    borrowed_at
+  }
+}
+
+Table borrowing_details {
+  id bigint [pk, increment]
+  borrowing_id bigint [ref: > borrowings.id, not null, note: 'cascade on delete']
+  product_id bigint [ref: > products.id, not null, note: 'cascade on delete']
+  quantity integer [not null, default: 1]
+  condition_on_return product_condition [note: 'nullable, diisi saat barang dikembalikan']
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    borrowing_id
+    product_id
+  }
+}
+
+// Enums
+
+Enum product_condition {
+  baik
+  rusak_ringan
+  rusak_berat
+}
+
+Enum borrowing_status {
+  dipinjam
+  dikembalikan
+  terlambat
+}

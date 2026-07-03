@@ -89,3 +89,6 @@ If existing pages and components support dark mode, new pages and components mus
 - Forgetting to add dark mode variants when the project uses dark mode
 - Not checking existing project conventions before adding new utilities
 - Overusing inline styles when Tailwind classes would suffice
+
+## Design System
+Refer to `DESIGN.md` in the project root for all colors, typography, spacing, and component styling rules. Always follow these tokens when building or editing UI.
