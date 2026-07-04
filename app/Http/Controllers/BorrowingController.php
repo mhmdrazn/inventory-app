@@ -25,7 +25,11 @@ class BorrowingController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('borrowings.index', compact('borrowings'));
+        $availableProducts = $request->user()->hasRole('admin', 'staff')
+            ? Product::available()->orderBy('name')->get(['id', 'name', 'code', 'stock'])
+            : collect();
+
+        return view('borrowings.index', compact('borrowings', 'availableProducts'));
     }
 
     public function create(): View

@@ -1,116 +1,163 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                Detail Barang
-            </h2>
-            <a href="{{ route('products.index') }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">&larr; Kembali</a>
-        </div>
+        <a href="{{ route('products.index') }}" class="hover:text-foreground transition-colors">Barang</a>
+        <span class="mx-1.5 text-border">/</span>
+        <span class="text-foreground">Detail</span>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Info Barang -->
-                        <div class="space-y-4">
-                            <div>
-                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Kode Barang</p>
-                                <p class="text-lg font-mono text-gray-900 dark:text-gray-100">{{ $product->code }}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Nama Barang</p>
-                                <p class="text-lg text-gray-900 dark:text-gray-100">{{ $product->name }}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Kategori</p>
-                                <p class="text-gray-900 dark:text-gray-100">{{ $product->category->name }}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Stok</p>
-                                @if($product->stock === 0)
-                                    <span class="inline-flex items-center rounded-full bg-red-100 dark:bg-red-900/30 px-2.5 py-0.5 text-xs font-medium text-red-800 dark:text-red-400">{{ $product->stock }}</span>
-                                @elseif($product->stock <= 5)
-                                    <span class="inline-flex items-center rounded-full bg-yellow-100 dark:bg-yellow-900/30 px-2.5 py-0.5 text-xs font-medium text-yellow-800 dark:text-yellow-400">{{ $product->stock }}</span>
-                                @else
-                                    <span class="inline-flex items-center rounded-full bg-green-100 dark:bg-green-900/30 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:text-green-400">{{ $product->stock }}</span>
-                                @endif
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Lokasi</p>
-                                <p class="text-gray-900 dark:text-gray-100">{{ $product->location ?? '-' }}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Kondisi</p>
-                                @if($product->condition === 'baik')
-                                    <span class="inline-flex items-center rounded-full bg-green-100 dark:bg-green-900/30 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:text-green-400">Baik</span>
-                                @elseif($product->condition === 'rusak_ringan')
-                                    <span class="inline-flex items-center rounded-full bg-yellow-100 dark:bg-yellow-900/30 px-2.5 py-0.5 text-xs font-medium text-yellow-800 dark:text-yellow-400">Rusak Ringan</span>
-                                @else
-                                    <span class="inline-flex items-center rounded-full bg-red-100 dark:bg-red-900/30 px-2.5 py-0.5 text-xs font-medium text-red-800 dark:text-red-400">Rusak Berat</span>
-                                @endif
-                            </div>
-                        </div>
+    <div class="mx-auto max-w-6xl space-y-6">
+        {{-- Header --}}
+        <div class="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">{{ $product->name }}</h1>
+                <p class="text-sm text-muted-foreground font-mono">{{ $product->code }}</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <x-ui.button variant="outline" :href="route('products.index')">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /></svg>
+                    Kembali
+                </x-ui.button>
+                @if(auth()->user()->hasRole('admin', 'staff'))
+                    <x-ui.button :href="route('products.edit', $product)">Edit</x-ui.button>
+                @endif
+            </div>
+        </div>
 
-                        <!-- Gambar -->
-                        <div>
-                            @if($product->image)
-                                <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" class="w-full h-64 object-cover rounded-lg">
+        {{-- Detail grid --}}
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            {{-- Image --}}
+            <x-ui.card :padded="false" class="overflow-hidden lg:col-span-1">
+                @if($product->image)
+                    <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" class="w-full h-64 object-cover">
+                @else
+                    <div class="w-full h-64 bg-muted flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>
+                    </div>
+                @endif
+                <div class="p-4 space-y-3">
+                    <div>
+                        <p class="text-xs text-muted-foreground uppercase tracking-wider">Kondisi</p>
+                        <div class="mt-1">
+                            @if($product->condition === 'baik')
+                                <x-ui.badge variant="success">Baik</x-ui.badge>
+                            @elseif($product->condition === 'rusak_ringan')
+                                <x-ui.badge variant="warning">Rusak Ringan</x-ui.badge>
                             @else
-                                <div class="w-full h-64 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-                                    <p class="text-gray-400 dark:text-gray-500">Tidak ada gambar</p>
-                                </div>
+                                <x-ui.badge variant="destructive">Rusak Berat</x-ui.badge>
                             @endif
                         </div>
                     </div>
+                    <div>
+                        <p class="text-xs text-muted-foreground uppercase tracking-wider">Stok Tersedia</p>
+                        <div class="mt-1">
+                            @if($product->stock === 0)
+                                <x-ui.badge variant="destructive">{{ $product->stock }} unit</x-ui.badge>
+                            @elseif($product->stock <= 5)
+                                <x-ui.badge variant="warning">{{ $product->stock }} unit</x-ui.badge>
+                            @else
+                                <x-ui.badge variant="success">{{ $product->stock }} unit</x-ui.badge>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </x-ui.card>
 
-                    <div class="mt-6 flex items-center gap-4">
-                        <a href="{{ route('products.edit', $product) }}" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white transition ease-in-out duration-150">Edit</a>
+            {{-- Info --}}
+            <x-ui.card class="lg:col-span-2">
+                <h3 class="font-semibold mb-4">Informasi Barang</h3>
+                <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+                    <div>
+                        <dt class="text-xs text-muted-foreground uppercase tracking-wider">Kode</dt>
+                        <dd class="mt-1 font-mono text-sm">{{ $product->code }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-xs text-muted-foreground uppercase tracking-wider">Nama</dt>
+                        <dd class="mt-1 text-sm font-medium">{{ $product->name }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-xs text-muted-foreground uppercase tracking-wider">Kategori</dt>
+                        <dd class="mt-1 text-sm">{{ $product->category->name }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-xs text-muted-foreground uppercase tracking-wider">Lokasi</dt>
+                        <dd class="mt-1 text-sm">{{ $product->location ?? '-' }}</dd>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <dt class="text-xs text-muted-foreground uppercase tracking-wider">Deskripsi</dt>
+                        <dd class="mt-1 text-sm text-muted-foreground">{{ $product->description ?? '-' }}</dd>
+                    </div>
+                </dl>
+            </x-ui.card>
+        </div>
+
+        {{-- Riwayat peminjaman --}}
+        @php
+            $history = $product->borrowingDetails->sortByDesc('created_at');
+            $activeCount = $history->filter(fn($d) => $d->borrowing->status === 'dipinjam')->count();
+            $totalBorrowed = $history->sum('quantity');
+        @endphp
+        <x-ui.card>
+            <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h3 class="font-semibold">Riwayat Peminjaman</h3>
+                    <p class="text-xs text-muted-foreground">Detail peminjaman barang ini sepanjang waktu.</p>
+                </div>
+                <div class="flex items-center gap-3 text-sm">
+                    <div class="rounded-md border px-3 py-1.5">
+                        <span class="text-muted-foreground text-xs">Sedang dipinjam</span>
+                        <span class="ml-2 font-semibold">{{ $activeCount }}</span>
+                    </div>
+                    <div class="rounded-md border px-3 py-1.5">
+                        <span class="text-muted-foreground text-xs">Total unit dipinjam</span>
+                        <span class="ml-2 font-semibold">{{ $totalBorrowed }}</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Riwayat Peminjaman -->
-            <div class="mt-6 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Riwayat Peminjaman</h3>
-                    @if($product->borrowingDetails->count() > 0)
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                <thead class="bg-gray-50 dark:bg-gray-700">
-                                    <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Peminjam</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Jumlah</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Tanggal Pinjam</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                    @foreach($product->borrowingDetails->sortByDesc('created_at') as $detail)
-                                        <tr>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{{ $detail->borrowing->borrower_name }}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ $detail->quantity }}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ $detail->borrowing->borrowed_at->format('d/m/Y') }}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                                @if($detail->borrowing->status === 'dipinjam')
-                                                    <span class="inline-flex items-center rounded-full bg-blue-100 dark:bg-blue-900/30 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:text-blue-400">Dipinjam</span>
-                                                @elseif($detail->borrowing->status === 'dikembalikan')
-                                                    <span class="inline-flex items-center rounded-full bg-green-100 dark:bg-green-900/30 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:text-green-400">Dikembalikan</span>
-                                                @else
-                                                    <span class="inline-flex items-center rounded-full bg-red-100 dark:bg-red-900/30 px-2.5 py-0.5 text-xs font-medium text-red-800 dark:text-red-400">Terlambat</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Belum ada riwayat peminjaman untuk barang ini.</p>
-                    @endif
+            @if($history->count() > 0)
+                <div class="overflow-x-auto -mx-6">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="border-y bg-muted/40 text-xs text-muted-foreground">
+                                <th class="px-6 py-2.5 text-left font-medium">Peminjam</th>
+                                <th class="px-6 py-2.5 text-left font-medium">Jumlah</th>
+                                <th class="px-6 py-2.5 text-left font-medium">Tanggal Pinjam</th>
+                                <th class="px-6 py-2.5 text-left font-medium">Jatuh Tempo</th>
+                                <th class="px-6 py-2.5 text-left font-medium">Status</th>
+                                <th class="px-6 py-2.5 text-right font-medium">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm">
+                            @foreach($history as $detail)
+                                <tr class="border-b last:border-0 hover:bg-muted/30 transition-colors">
+                                    <td class="px-6 py-3 font-medium">{{ $detail->borrowing->borrower_name }}</td>
+                                    <td class="px-6 py-3 text-muted-foreground">{{ $detail->quantity }} unit</td>
+                                    <td class="px-6 py-3 text-muted-foreground">{{ $detail->borrowing->borrowed_at->format('d M Y') }}</td>
+                                    <td class="px-6 py-3 text-muted-foreground">{{ $detail->borrowing->due_at->format('d M Y') }}</td>
+                                    <td class="px-6 py-3">
+                                        @if($detail->borrowing->status === 'dipinjam')
+                                            <x-ui.badge variant="info">Dipinjam</x-ui.badge>
+                                        @elseif($detail->borrowing->status === 'dikembalikan')
+                                            <x-ui.badge variant="success">Dikembalikan</x-ui.badge>
+                                        @else
+                                            <x-ui.badge variant="destructive">Terlambat</x-ui.badge>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-3 text-right">
+                                        @if(auth()->user()->hasRole('admin', 'staff'))
+                                            <a href="{{ route('borrowings.show', $detail->borrowing) }}" class="text-sm text-primary hover:underline">Lihat</a>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-        </div>
+            @else
+                <div class="py-12 text-center">
+                    <p class="text-sm text-muted-foreground">Belum ada riwayat peminjaman untuk barang ini.</p>
+                </div>
+            @endif
+        </x-ui.card>
     </div>
 </x-app-layout>
