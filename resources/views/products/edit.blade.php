@@ -70,7 +70,7 @@
                                 <x-input-label for="image" value="Gambar (opsional)" />
                                 @if($product->image)
                                     <div class="mt-2 mb-2">
-                                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-32 h-32 object-cover rounded-md">
+                                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" loading="lazy" decoding="async" class="w-32 h-32 object-cover rounded-md">
                                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Gambar saat ini</p>
                                     </div>
                                 @endif
