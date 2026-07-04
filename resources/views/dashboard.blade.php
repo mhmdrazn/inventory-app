@@ -244,8 +244,8 @@
                     datasets: [{
                         label: 'Jumlah Peminjaman',
                         data: @json($chartData),
-                        backgroundColor: isDark ? 'rgba(167, 139, 250, 0.5)' : 'rgba(124, 58, 237, 0.4)',
-                        borderColor: isDark ? 'rgba(167, 139, 250, 1)' : 'rgba(124, 58, 237, 1)',
+                        backgroundColor: isDark ? 'rgba(255, 51, 87, 0.5)' : 'rgba(255, 0, 33, 0.4)',
+                        borderColor: isDark ? 'rgba(255, 51, 87, 1)' : 'rgba(255, 0, 33, 1)',
                         borderWidth: 1,
                         borderRadius: 6,
                     }]

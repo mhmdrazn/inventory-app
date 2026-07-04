@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Warehaus">
+  <circle cx="100" cy="100" r="100" fill="#cd0921"/>
+  <g fill="#ffffff">
+    <!-- Whale body -->
+    <path d="M 68 82
+             C 90 68 130 68 154 88
+             C 168 98 172 108 168 118
+             C 162 130 146 138 128 140
+             L 82 138
+             C 66 134 56 122 58 108
+             C 60 96 62 88 68 82 Z"/>
+    <!-- Belly shading (inner darker curve) -->
+    <path opacity="0.18" fill="#000" d="M 78 128
+             C 100 148 138 148 158 126
+             C 156 132 148 138 128 140
+             L 82 138
+             C 76 137 74 132 78 128 Z"/>
+    <!-- Tail top fluke -->
+    <path d="M 62 82
+             C 55 68 55 52 68 46
+             C 74 50 78 60 76 74
+             L 68 84 Z"/>
+    <!-- Tail bottom fluke -->
+    <path d="M 40 96
+             C 30 96 24 84 32 74
+             C 42 68 56 72 64 84
+             L 58 96 Z"/>
+    <!-- Wave highlight along whale side -->
+    <path opacity="0.35" fill="#cd0921" d="M 76 106
+             C 96 96 130 96 158 108
+             C 148 100 122 96 100 100
+             C 88 102 80 104 76 106 Z"/>
+    <!-- Eye -->
+    <circle cx="146" cy="108" r="3.5" fill="#cd0921"/>
+  </g>
+</svg>

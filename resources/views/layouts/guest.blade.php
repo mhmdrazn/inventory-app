@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Inventaris') }}</title>
+        <title>{{ config('app.name', 'Warehaus') }}</title>
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=manrope:400,500,600,700,800&display=swap" rel="stylesheet" />
@@ -46,15 +46,13 @@
 
         <div class="grid min-h-screen lg:grid-cols-2">
             {{-- Left: brand column --}}
-            <div class="relative hidden lg:flex flex-col justify-between p-10 overflow-hidden bg-gradient-to-br from-violet-600 via-violet-700 to-purple-900 text-white">
+            <div class="relative hidden lg:flex flex-col justify-between p-10 overflow-hidden text-white" style="background: linear-gradient(135deg, #ff0021 0%, #b3001c 45%, #0a1f44 100%);">
                 {{-- Decorative pattern --}}
-                <div class="absolute inset-0 opacity-30" style="background-image: radial-gradient(circle at 25% 20%, rgba(255,255,255,0.15) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 40%);"></div>
+                <div class="absolute inset-0 opacity-30" style="background-image: radial-gradient(circle at 25% 20%, rgba(255,255,255,0.2) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 40%);"></div>
 
                 <div class="relative flex items-center gap-2">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-md bg-white/15 backdrop-blur">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.25"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
-                    </div>
-                    <span class="font-bold text-lg tracking-tight">Inventaris</span>
+                    <img src="{{ asset('img/logo.png') }}" alt="Warehaus" class="h-9 w-9">
+                    <span class="font-bold text-lg tracking-tight">Warehaus</span>
                 </div>
 
                 <div class="relative space-y-6 max-w-md">
@@ -79,10 +77,8 @@
             <div class="flex flex-col items-center justify-center p-6 sm:p-10">
                 {{-- Mobile brand --}}
                 <div class="lg:hidden mb-8 flex items-center gap-2">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.25"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
-                    </div>
-                    <span class="font-bold text-lg tracking-tight">Inventaris</span>
+                    <img src="{{ asset('img/logo.png') }}" alt="Warehaus" class="h-9 w-9">
+                    <span class="font-bold text-lg tracking-tight">Warehaus</span>
                 </div>
 
                 <div class="w-full max-w-md">

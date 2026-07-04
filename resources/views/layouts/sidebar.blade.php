@@ -71,10 +71,8 @@
 >
     {{-- Brand --}}
     <div class="flex h-14 items-center gap-2 border-b px-5">
-        <div class="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.25"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
-        </div>
-        <span class="font-bold text-base tracking-tight">Inventaris</span>
+        <img src="{{ asset('img/logo.png') }}" alt="Warehaus" class="h-7 w-7">
+        <span class="font-bold text-base tracking-tight">Warehaus</span>
     </div>
 
     {{-- Nav --}}
@@ -103,13 +101,14 @@
 
     {{-- Role card + logout --}}
     <div class="border-t p-3 space-y-2">
-        <div class="rounded-lg bg-accent/50 p-3">
-            <div class="flex items-center gap-2 mb-1">
-                <span class="inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-                <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{{ ucfirst($user->role->name) }}</p>
+        <div class="flex items-center gap-2.5 rounded-lg bg-accent/50 p-3">
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                {{ strtoupper(substr($user->name, 0, 1)) }}
             </div>
-            <p class="text-sm font-medium truncate">{{ $user->name }}</p>
-            <p class="text-xs text-muted-foreground truncate">{{ $user->email }}</p>
+            <div class="min-w-0 flex-1">
+                <p class="text-sm font-medium truncate">{{ $user->name }}</p>
+                <p class="text-xs text-muted-foreground truncate">{{ $user->email }}</p>
+            </div>
         </div>
 
         <form method="POST" action="{{ route('logout') }}">

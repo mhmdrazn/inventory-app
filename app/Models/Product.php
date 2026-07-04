@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -46,6 +49,28 @@ class Product extends Model
     public function borrowingDetails(): HasMany
     {
         return $this->hasMany(BorrowingDetail::class);
+    }
+
+    /**
+     * Resolve `image` to a full displayable URL:
+     * - remote http(s) URLs are returned unchanged
+     * - local paths go through Storage::url()
+     * - empty stays null
+     */
+    protected function imageUrl(): Attribute
+    {
+        return Attribute::make(
+            get: function (): ?string {
+                if (! $this->image) {
+                    return null;
+                }
+                if (Str::startsWith($this->image, ['http://', 'https://'])) {
+                    return $this->image;
+                }
+
+                return Storage::url($this->image);
+            },
+        );
     }
 
     /**
