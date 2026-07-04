@@ -76,4 +76,38 @@ class Product extends Model
     {
         return $query->where('stock', '>', 0);
     }
+
+    /**
+     * Generate the next unique code for a product in the given category.
+     *
+     * Format: INV-{CAT3}-{sequence padded to 3 digits}, e.g. INV-ELE-014.
+     * Falls back to INV-GEN-### when no category is provided.
+     */
+    public static function generateCode(?int $categoryId): string
+    {
+        $prefix = 'INV-GEN';
+
+        if ($categoryId !== null) {
+            $category = Category::find($categoryId);
+            if ($category) {
+                $prefix = 'INV-'.strtoupper(substr(preg_replace('/[^A-Za-z]/', '', $category->name) ?: 'GEN', 0, 3));
+            }
+        }
+
+        $lastCode = self::where('code', 'like', $prefix.'-%')
+            ->orderByDesc('code')
+            ->value('code');
+
+        $nextSequence = 1;
+        if ($lastCode && preg_match('/-(\d+)$/', $lastCode, $matches)) {
+            $nextSequence = ((int) $matches[1]) + 1;
+        }
+
+        do {
+            $candidate = sprintf('%s-%03d', $prefix, $nextSequence);
+            $nextSequence++;
+        } while (self::where('code', $candidate)->exists());
+
+        return $candidate;
+    }
 }

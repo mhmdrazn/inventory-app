@@ -5,11 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'Inventaris') }}</title>
 
-        <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=manrope:400,500,600,700,800&display=swap" rel="stylesheet" />
 
         <script>
             (function () {
@@ -21,19 +20,74 @@
             })();
         </script>
 
-        <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
+    <body class="font-sans antialiased bg-background text-foreground">
+        {{-- Theme toggle top-right --}}
+        <div class="absolute right-4 top-4 sm:right-6 sm:top-6">
+            <button
+                type="button"
+                x-data="{
+                    dark: document.documentElement.classList.contains('dark'),
+                    toggle() {
+                        this.dark = !this.dark;
+                        document.documentElement.classList.toggle('dark', this.dark);
+                        localStorage.setItem('theme', this.dark ? 'dark' : 'light');
+                    }
+                }"
+                @click="toggle()"
+                :aria-label="dark ? 'Switch to light mode' : 'Switch to dark mode'"
+                class="inline-flex items-center justify-center h-9 w-9 rounded-md border border-input bg-card hover:bg-accent transition-colors"
+            >
+                <svg x-show="!dark" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1.5m0 15V21m8.485-8.485H21M3 12h1.515m14.02-6.02l-1.06 1.06M6.525 17.475l-1.06 1.06m0-13.06l1.06 1.06m10.95 10.95l1.06 1.06M12 7.5A4.5 4.5 0 1 1 12 16.5a4.5 4.5 0 0 1 0-9z" /></svg>
+                <svg x-show="dark" x-cloak xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
+            </button>
+        </div>
+
+        <div class="grid min-h-screen lg:grid-cols-2">
+            {{-- Left: brand column --}}
+            <div class="relative hidden lg:flex flex-col justify-between p-10 overflow-hidden bg-gradient-to-br from-violet-600 via-violet-700 to-purple-900 text-white">
+                {{-- Decorative pattern --}}
+                <div class="absolute inset-0 opacity-30" style="background-image: radial-gradient(circle at 25% 20%, rgba(255,255,255,0.15) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 40%);"></div>
+
+                <div class="relative flex items-center gap-2">
+                    <div class="flex h-8 w-8 items-center justify-center rounded-md bg-white/15 backdrop-blur">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.25"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
+                    </div>
+                    <span class="font-bold text-lg tracking-tight">Inventaris</span>
+                </div>
+
+                <div class="relative space-y-6 max-w-md">
+                    <blockquote class="text-2xl font-semibold leading-snug tracking-tight">
+                        Kelola inventaris dan peminjaman barang perusahaan dengan lebih terorganisir dan efisien.
+                    </blockquote>
+                    <div class="flex items-center gap-3">
+                        <div class="h-10 w-10 rounded-full bg-white/15 backdrop-blur flex items-center justify-center text-sm font-semibold">PT</div>
+                        <div class="text-sm">
+                            <p class="font-medium">PT Telkomsel</p>
+                            <p class="text-white/70">Sistem Manajemen Inventaris</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative text-xs text-white/60">
+                    &copy; {{ date('Y') }} PT Telkomsel · Prototype
+                </div>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
+            {{-- Right: form column --}}
+            <div class="flex flex-col items-center justify-center p-6 sm:p-10">
+                {{-- Mobile brand --}}
+                <div class="lg:hidden mb-8 flex items-center gap-2">
+                    <div class="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.25"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
+                    </div>
+                    <span class="font-bold text-lg tracking-tight">Inventaris</span>
+                </div>
+
+                <div class="w-full max-w-md">
+                    {{ $slot }}
+                </div>
             </div>
         </div>
     </body>

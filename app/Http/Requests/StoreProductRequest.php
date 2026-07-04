@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Product;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -13,6 +14,17 @@ class StoreProductRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
+    }
+
+    /**
+     * Auto-generate the product code based on category before validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        $categoryId = $this->input('category_id');
+        $this->merge([
+            'code' => Product::generateCode($categoryId ? (int) $categoryId : null),
+        ]);
     }
 
     /**

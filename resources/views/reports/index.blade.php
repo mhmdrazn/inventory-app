@@ -30,8 +30,8 @@
                     </x-ui.select>
                 </div>
                 <div class="flex items-end gap-2">
-                    <x-ui.button type="submit">Cari</x-ui.button>
-                    <x-ui.button variant="outline" :href="route('reports.index')">Reset</x-ui.button>
+                    <x-ui.button type="submit" class="flex-1 w-full">Cari</x-ui.button>
+                    <x-ui.button variant="outline" :href="route('reports.index')" class="flex-1 w-full">Reset</x-ui.button>
                 </div>
             </form>
         </x-ui.card>

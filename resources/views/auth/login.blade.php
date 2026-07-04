@@ -1,47 +1,47 @@
 <x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <div class="space-y-2 text-center sm:text-left">
+        <h1 class="text-2xl font-bold tracking-tight">Masuk ke akun Anda</h1>
+        <p class="text-sm text-muted-foreground">Masukkan email dan kata sandi untuk melanjutkan.</p>
+    </div>
 
-    <form method="POST" action="{{ route('login') }}">
+    @if (session('status'))
+        <div class="mt-4">
+            <x-ui.alert variant="success">{{ session('status') }}</x-ui.alert>
+        </div>
+    @endif
+
+    <form method="POST" action="{{ route('login') }}" class="mt-6 space-y-4">
         @csrf
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="space-y-1.5">
+            <x-ui.label for="email" value="Email" />
+            <x-ui.input id="email" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" placeholder="nama@telkomsel.com" />
+            <x-input-error :messages="$errors->get('email')" />
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+                <x-ui.label for="password" value="Kata Sandi" />
+                @if (Route::has('password.request'))
+                    <a href="{{ route('password.request') }}" class="text-xs text-primary hover:underline">Lupa kata sandi?</a>
+                @endif
+            </div>
+            <x-ui.input id="password" type="password" name="password" required autocomplete="current-password" placeholder="••••••••" />
+            <x-input-error :messages="$errors->get('password')" />
         </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+        <label class="inline-flex items-center gap-2 text-sm text-muted-foreground">
+            <input type="checkbox" name="remember" class="h-4 w-4 rounded border-input text-primary focus:ring-ring focus:ring-offset-0">
+            <span>Ingat saya</span>
+        </label>
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
+        <x-ui.button type="submit" class="w-full">Masuk</x-ui.button>
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
+        @if (Route::has('register'))
+            <p class="text-center text-sm text-muted-foreground">
+                Belum memiliki akun?
+                <a href="{{ route('register') }}" class="font-medium text-primary hover:underline">Daftar</a>
+            </p>
+        @endif
     </form>
 </x-guest-layout>

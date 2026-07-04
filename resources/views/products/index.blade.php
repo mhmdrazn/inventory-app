@@ -70,8 +70,8 @@
                     </x-ui.select>
                 </div>
                 <div class="flex items-end gap-2">
-                    <x-ui.button type="submit">Cari</x-ui.button>
-                    <x-ui.button variant="outline" :href="route('products.index')">Reset</x-ui.button>
+                    <x-ui.button type="submit" class="flex-1 w-full">Cari</x-ui.button>
+                    <x-ui.button variant="outline" :href="route('products.index')" class="flex-1 w-full">Reset</x-ui.button>
                 </div>
             </form>
         </x-ui.card>
@@ -169,20 +169,20 @@
             @if($products->count() > 0)
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     @foreach($products as $product)
-                        <x-ui.card :padded="false" class="overflow-hidden flex flex-col">
-                            <a href="{{ route('products.show', $product) }}" class="block bg-muted aspect-video overflow-hidden">
+                        <a href="{{ route('products.show', $product) }}" class="group flex flex-col rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden transition-all hover:border-primary/40 hover:shadow-md">
+                            <div class="block bg-muted aspect-video overflow-hidden">
                                 @if($product->image)
-                                    <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover transition-transform hover:scale-105">
+                                    <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover transition-transform group-hover:scale-105">
                                 @else
                                     <div class="flex h-full w-full items-center justify-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>
                                     </div>
                                 @endif
-                            </a>
+                            </div>
                             <div class="flex flex-col flex-1 p-4 space-y-3">
                                 <div class="space-y-1">
                                     <p class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{{ $product->code }}</p>
-                                    <a href="{{ route('products.show', $product) }}" class="font-semibold leading-tight hover:text-primary transition-colors line-clamp-2">{{ $product->name }}</a>
+                                    <p class="font-semibold leading-tight group-hover:text-primary transition-colors line-clamp-2">{{ $product->name }}</p>
                                     <p class="text-xs text-muted-foreground">{{ $product->category->name }}</p>
                                 </div>
                                 <div class="flex flex-wrap items-center gap-1.5">
@@ -202,35 +202,8 @@
                                         <x-ui.badge variant="destructive">Rusak Berat</x-ui.badge>
                                     @endif
                                 </div>
-                                <div class="flex-1"></div>
-                                <div class="flex items-center gap-1.5 pt-1 border-t">
-                                    <x-ui.button variant="ghost" size="sm" :href="route('products.show', $product)" class="flex-1">Detail</x-ui.button>
-                                    @if(auth()->user()->hasRole('admin', 'staff'))
-                                        <x-ui.button variant="outline" size="sm" :href="route('products.edit', $product)">Edit</x-ui.button>
-                                        <div x-data="{ showDeleteModal: false }">
-                                            <x-ui.button variant="soft-destructive" size="sm" @click="showDeleteModal = true">Hapus</x-ui.button>
-                                            <div x-show="showDeleteModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
-                                                <div @click="showDeleteModal = false" class="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
-                                                <div class="relative flex min-h-screen items-center justify-center p-4">
-                                                    <div @click.stop class="relative w-full max-w-md rounded-lg border bg-card p-6 shadow-lg">
-                                                        <h3 class="text-lg font-semibold">Konfirmasi Hapus</h3>
-                                                        <p class="mt-2 text-sm text-muted-foreground">Yakin ingin menghapus <strong class="text-foreground">{{ $product->name }}</strong>?</p>
-                                                        <div class="mt-6 flex justify-end gap-2">
-                                                            <x-ui.button variant="outline" @click="showDeleteModal = false">Batal</x-ui.button>
-                                                            <form method="POST" action="{{ route('products.destroy', $product) }}">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <x-ui.button variant="destructive" type="submit">Hapus</x-ui.button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
                             </div>
-                        </x-ui.card>
+                        </a>
                     @endforeach
                 </div>
                 @if($products->hasPages())
@@ -259,8 +232,8 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="space-y-1.5">
                         <x-ui.label for="p-code" value="Kode Barang" />
-                        <x-ui.input id="p-code" name="code" :value="old('code')" required placeholder="contoh: INV-ELK-001" />
-                        <x-input-error :messages="$errors->get('code')" />
+                        <x-ui.input id="p-code" value="Otomatis dibuat" readonly class="cursor-not-allowed bg-muted text-muted-foreground" />
+                        <p class="text-xs text-muted-foreground">Kode dihasilkan otomatis berdasarkan kategori.</p>
                     </div>
                     <div class="space-y-1.5">
                         <x-ui.label for="p-name" value="Nama Barang" />
