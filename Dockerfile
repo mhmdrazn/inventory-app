@@ -1,11 +1,15 @@
 # syntax=docker/dockerfile:1
-# Warehaus — Laravel 13 + PHP 8.4 image for Railway.
-# Railway's default Nixpacks provider was pinning PHP 8.3 and omitting ext-gd,
-# breaking composer install for Laravel 13 (needs 8.4+) and phpspreadsheet (needs gd).
+# Warehaus — Laravel 13 + FrankenPHP (Caddy-based server) for Railway.
+#
+# Previously used `php artisan serve` which is single-threaded and queues
+# every concurrent request — one slow image download would block page
+# navigation. FrankenPHP handles requests concurrently via Caddy, so
+# page-to-page navigation is no longer blocked by asset requests.
 
-FROM php:8.4-cli-alpine
+FROM dunglas/frankenphp:1-php8.4-alpine
 
 # System deps + PHP extensions
+# install-php-extensions is a helper shipped in the FrankenPHP image.
 RUN apk add --no-cache \
         postgresql-dev \
         libpng-dev \
@@ -18,12 +22,13 @@ RUN apk add --no-cache \
         git \
         unzip \
         bash \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) \
+    && install-php-extensions \
         pdo_pgsql \
         gd \
         zip \
-        bcmath
+        bcmath \
+        opcache \
+        intl
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -45,16 +50,20 @@ RUN npm ci
 # --- App layer ---
 COPY . .
 
-# Generate optimized autoloader, register Laravel packages, build frontend,
-# and link storage. storage:link may error if the symlink already exists — safe to ignore.
 RUN composer dump-autoload --optimize --classmap-authoritative --no-scripts \
     && php artisan package:discover --no-interaction \
     && npm run build \
     && (php artisan storage:link || true)
 
+# Laravel needs write access to these dirs at runtime.
+RUN chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
+
+# Railway injects $PORT. FrankenPHP's default Caddyfile reads SERVER_NAME,
+# where ":<port>" means bind on all interfaces at that port.
 ENV PORT=8080
 EXPOSE 8080
 
-# Cache config/routes/views at runtime so env vars from Railway are baked in,
-# then serve via the built-in PHP server bound to 0.0.0.0.
-CMD ["sh", "-c", "php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"]
+# Cache config/routes/views at runtime (Railway env vars are now available),
+# then exec into FrankenPHP so SIGTERM propagates for graceful shutdown.
+CMD ["sh", "-c", "php artisan config:cache && php artisan route:cache && php artisan view:cache && export SERVER_NAME=\":${PORT:-8080}\" && exec frankenphp run --config /etc/caddy/Caddyfile"]
