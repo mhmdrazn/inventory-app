@@ -49,7 +49,10 @@
                     <x-ui.input id="date_to" name="date_to" type="date" :value="request('date_to')" />
                 </div>
                 <div class="flex items-end gap-2">
-                    <x-ui.button type="submit" class="flex-1 w-full">Cari</x-ui.button>
+                    <x-ui.button type="submit" class="flex-1 w-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
+                        Cari
+                    </x-ui.button>
                     <x-ui.button variant="outline" :href="route('borrowings.index')" class="flex-1 w-full">Reset</x-ui.button>
                 </div>
             </form>

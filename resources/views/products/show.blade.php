@@ -18,7 +18,7 @@
                     Kembali
                 </x-ui.button>
                 @if(auth()->user()->hasRole('admin', 'staff'))
-                    <x-ui.button variant="outline" :href="route('products.edit', $product)">
+                    <x-ui.button variant="outline" @click="$dispatch('open-dialog', 'edit-product-show')">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" /></svg>
                         Edit
                     </x-ui.button>
@@ -193,4 +193,85 @@
             @endif
         </x-ui.card>
     </div>
+
+    @if(auth()->user()->hasRole('admin', 'staff'))
+        {{-- Edit Product Dialog --}}
+        <x-ui.dialog
+            name="edit-product-show"
+            title="Edit Barang"
+            description="Perbarui detail barang."
+            maxWidth="2xl"
+        >
+            <form method="POST" action="{{ route('products.update', $product) }}" enctype="multipart/form-data" class="space-y-5">
+                @csrf
+                @method('PUT')
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <x-ui.label for="show-edit-code" value="Kode Barang" />
+                        <x-ui.input id="show-edit-code" name="code" :value="old('code', $product->code)" required />
+                        <x-input-error :messages="$errors->get('code')" />
+                    </div>
+                    <div class="space-y-1.5">
+                        <x-ui.label for="show-edit-name" value="Nama Barang" />
+                        <x-ui.input id="show-edit-name" name="name" :value="old('name', $product->name)" required />
+                        <x-input-error :messages="$errors->get('name')" />
+                    </div>
+                    <div class="space-y-1.5">
+                        <x-ui.label for="show-edit-category" value="Kategori" />
+                        <x-ui.select id="show-edit-category" name="category_id" required>
+                            <option value="">Pilih Kategori</option>
+                            @foreach($categories as $c)
+                                <option value="{{ $c->id }}" {{ old('category_id', $product->category_id) == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
+                            @endforeach
+                        </x-ui.select>
+                        <x-input-error :messages="$errors->get('category_id')" />
+                    </div>
+                    <div class="space-y-1.5">
+                        <x-ui.label for="show-edit-stock" value="Stok" />
+                        <x-ui.input id="show-edit-stock" name="stock" type="number" min="0" :value="old('stock', $product->stock)" required />
+                        <x-input-error :messages="$errors->get('stock')" />
+                    </div>
+                    <div class="space-y-1.5 sm:col-span-2">
+                        <x-ui.label for="show-edit-location" value="Lokasi Penyimpanan" />
+                        <x-ui.input id="show-edit-location" name="location" :value="old('location', $product->location)" placeholder="contoh: Gudang IT Lt. 2" />
+                        <x-input-error :messages="$errors->get('location')" />
+                    </div>
+                    <div class="space-y-1.5">
+                        <x-ui.label for="show-edit-condition" value="Kondisi" />
+                        <x-ui.select id="show-edit-condition" name="condition" required>
+                            <option value="baik" {{ old('condition', $product->condition) === 'baik' ? 'selected' : '' }}>Baik</option>
+                            <option value="rusak_ringan" {{ old('condition', $product->condition) === 'rusak_ringan' ? 'selected' : '' }}>Rusak Ringan</option>
+                            <option value="rusak_berat" {{ old('condition', $product->condition) === 'rusak_berat' ? 'selected' : '' }}>Rusak Berat</option>
+                        </x-ui.select>
+                        <x-input-error :messages="$errors->get('condition')" />
+                    </div>
+                    <div class="space-y-1.5">
+                        <x-ui.label for="show-edit-image" value="Gambar (opsional)" />
+                        <input id="show-edit-image" name="image" type="file" accept="image/jpeg,image/png" class="flex h-9 w-full rounded-md border border-input bg-background text-sm file:mr-3 file:h-full file:border-0 file:border-r file:bg-muted file:px-3 file:text-xs file:font-medium file:text-foreground">
+                        <p class="text-xs text-muted-foreground">JPG/PNG, maks. 2MB. Kosongkan untuk mempertahankan gambar saat ini.</p>
+                        <x-input-error :messages="$errors->get('image')" />
+                    </div>
+                    @if($product->image)
+                        <div class="sm:col-span-2 flex items-center gap-3 rounded-md border bg-muted/40 p-3">
+                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" loading="lazy" decoding="async" class="h-14 w-14 rounded-md object-cover">
+                            <p class="text-xs text-muted-foreground">Gambar saat ini &mdash; akan dipertahankan jika kolom gambar dikosongkan.</p>
+                        </div>
+                    @endif
+                </div>
+
+                <div class="flex items-center justify-end gap-2 border-t pt-4">
+                    <x-ui.button type="button" variant="outline" @click="$dispatch('close-dialog', 'edit-product-show')">Batal</x-ui.button>
+                    <x-ui.button type="submit">Simpan Perubahan</x-ui.button>
+                </div>
+            </form>
+        </x-ui.dialog>
+
+        @if($errors->any())
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    window.dispatchEvent(new CustomEvent('open-dialog', { detail: 'edit-product-show' }));
+                });
+            </script>
+        @endif
+    @endif
 </x-app-layout>

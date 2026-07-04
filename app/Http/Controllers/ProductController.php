@@ -52,15 +52,14 @@ class ProductController extends Controller
     public function show(Product $product): View
     {
         $product->load(['category', 'borrowingDetails.borrowing']);
-
-        return view('products.show', compact('product'));
-    }
-
-    public function edit(Product $product): View
-    {
         $categories = Category::orderBy('name')->get();
 
-        return view('products.edit', compact('product', 'categories'));
+        return view('products.show', compact('product', 'categories'));
+    }
+
+    public function edit(Product $product): RedirectResponse
+    {
+        return redirect()->route('products.index', ['edit' => $product->id]);
     }
 
     public function update(UpdateProductRequest $request, Product $product): RedirectResponse

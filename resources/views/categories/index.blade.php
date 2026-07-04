@@ -7,7 +7,7 @@
                 <h1 class="text-2xl font-bold tracking-tight">Daftar Kategori</h1>
                 <p class="text-sm text-muted-foreground">Kelola kategori barang.</p>
             </div>
-            <x-ui.button :href="route('categories.create')">
+            <x-ui.button @click="$dispatch('open-dialog', 'create-category')">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
                 Tambah Kategori
             </x-ui.button>
@@ -39,7 +39,13 @@
                                 </td>
                                 <td class="px-6 py-3">
                                     <div class="flex items-center justify-end gap-1.5">
-                                        <x-ui.button variant="outline" size="sm" :href="route('categories.edit', $category)">Edit</x-ui.button>
+                                        <x-ui.button
+                                            variant="outline"
+                                            size="sm"
+                                            @click="$dispatch('open-dialog', 'edit-category-{{ $category->id }}')"
+                                        >
+                                            Edit
+                                        </x-ui.button>
                                         <div x-data="{ showDeleteModal: false }" class="inline-flex">
                                             <x-ui.button variant="soft-destructive" size="sm" @click="showDeleteModal = true">Hapus</x-ui.button>
                                             <div x-show="showDeleteModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
@@ -72,6 +78,28 @@
                                     </div>
                                 </td>
                             </tr>
+
+                            {{-- Per-row Edit dialog --}}
+                            <x-ui.dialog
+                                name="edit-category-{{ $category->id }}"
+                                title="Edit Kategori"
+                                description="Perbarui nama kategori."
+                                maxWidth="md"
+                            >
+                                <form method="POST" action="{{ route('categories.update', $category) }}" class="space-y-4">
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="space-y-1.5">
+                                        <x-ui.label for="edit-cat-name-{{ $category->id }}" value="Nama Kategori" />
+                                        <x-ui.input id="edit-cat-name-{{ $category->id }}" name="name" :value="old('name', $category->name)" required />
+                                        <x-input-error :messages="$errors->get('name')" />
+                                    </div>
+                                    <div class="flex items-center justify-end gap-2 border-t pt-4">
+                                        <x-ui.button type="button" variant="outline" @click="$dispatch('close-dialog', 'edit-category-{{ $category->id }}')">Batal</x-ui.button>
+                                        <x-ui.button type="submit">Simpan Perubahan</x-ui.button>
+                                    </div>
+                                </form>
+                            </x-ui.dialog>
                         @empty
                             <tr>
                                 <td colspan="3" class="px-6 py-12 text-center text-sm text-muted-foreground">Belum ada kategori.</td>
@@ -82,4 +110,41 @@
             </div>
         </x-ui.card>
     </div>
+
+    {{-- Create Category Dialog --}}
+    <x-ui.dialog
+        name="create-category"
+        title="Tambah Kategori"
+        description="Buat kategori baru untuk mengelompokkan barang."
+        maxWidth="md"
+    >
+        <form method="POST" action="{{ route('categories.store') }}" class="space-y-4">
+            @csrf
+            <div class="space-y-1.5">
+                <x-ui.label for="new-cat-name" value="Nama Kategori" />
+                <x-ui.input id="new-cat-name" name="name" :value="old('name')" required autofocus placeholder="contoh: Elektronik" />
+                <x-input-error :messages="$errors->get('name')" />
+            </div>
+            <div class="flex items-center justify-end gap-2 border-t pt-4">
+                <x-ui.button type="button" variant="outline" @click="$dispatch('close-dialog', 'create-category')">Batal</x-ui.button>
+                <x-ui.button type="submit">Simpan Kategori</x-ui.button>
+            </div>
+        </form>
+    </x-ui.dialog>
+
+    @if($errors->any() || request('create'))
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                window.dispatchEvent(new CustomEvent('open-dialog', { detail: 'create-category' }));
+            });
+        </script>
+    @endif
+
+    @if(request('edit'))
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                window.dispatchEvent(new CustomEvent('open-dialog', { detail: 'edit-category-{{ (int) request('edit') }}' }));
+            });
+        </script>
+    @endif
 </x-app-layout>

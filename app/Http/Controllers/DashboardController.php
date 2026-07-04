@@ -42,20 +42,21 @@ class DashboardController extends Controller
             $chartData[] = $found ? $found->total : 0;
         }
 
-        // Peminjaman terbaru (5 terakhir)
-        $recentBorrowings = Borrowing::with(['user', 'borrowingDetails'])
+        // Peminjaman terbaru (5 terakhir) — view only reads borrower_name, borrowed_at, status.
+        $recentBorrowings = Borrowing::select(['id', 'borrower_name', 'borrowed_at', 'status'])
             ->latest()
             ->take(5)
             ->get();
 
         // Barang stok menipis (<= 5)
-        $lowStockProducts = Product::with('category')
+        $lowStockProducts = Product::with('category:id,name')
+            ->select(['id', 'name', 'stock', 'category_id'])
             ->where('stock', '<=', 5)
             ->orderBy('stock')
             ->get();
 
-        // Peminjaman overdue
-        $overdueBorrowings = Borrowing::with(['user', 'borrowingDetails'])
+        // Peminjaman overdue — view reads borrower_name, due_at only.
+        $overdueBorrowings = Borrowing::select(['id', 'borrower_name', 'due_at'])
             ->where('status', 'dipinjam')
             ->where('due_at', '<', Carbon::today())
             ->get();

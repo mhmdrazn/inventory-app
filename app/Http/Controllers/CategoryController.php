@@ -17,9 +17,9 @@ class CategoryController extends Controller
         return view('categories.index', compact('categories'));
     }
 
-    public function create(): View
+    public function create(): RedirectResponse
     {
-        return view('categories.create');
+        return redirect()->route('categories.index', ['create' => 1]);
     }
 
     public function store(StoreCategoryRequest $request): RedirectResponse
@@ -37,9 +37,9 @@ class CategoryController extends Controller
         return view('categories.show', compact('category'));
     }
 
-    public function edit(Category $category): View
+    public function edit(Category $category): RedirectResponse
     {
-        return view('categories.edit', compact('category'));
+        return redirect()->route('categories.index', ['edit' => $category->id]);
     }
 
     public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse

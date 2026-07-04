@@ -79,4 +79,59 @@
     }
 }
 
+@layer components {
+    /* Dropdowns (select) — custom chevron on the right, themed for light + dark. */
+    select.ui-select {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24' stroke='%2371717a' stroke-width='2'><path stroke-linecap='round' stroke-linejoin='round' d='m6 9 6 6 6-6'/></svg>");
+        background-position: right 0.625rem center;
+        background-repeat: no-repeat;
+        background-size: 1rem 1rem;
+    }
+    .dark select.ui-select {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24' stroke='%23a1a1aa' stroke-width='2'><path stroke-linecap='round' stroke-linejoin='round' d='m6 9 6 6 6-6'/></svg>");
+    }
+    select.ui-select:hover {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24' stroke='%2318181b' stroke-width='2.25'><path stroke-linecap='round' stroke-linejoin='round' d='m6 9 6 6 6-6'/></svg>");
+    }
+    .dark select.ui-select:hover {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24' stroke='%23fafafa' stroke-width='2.25'><path stroke-linecap='round' stroke-linejoin='round' d='m6 9 6 6 6-6'/></svg>");
+    }
+
+    /* Style the option list where possible. Cross-browser support is limited,
+       but it makes options at least readable in the app's theme. */
+    select.ui-select option {
+        background-color: hsl(var(--background));
+        color: hsl(var(--foreground));
+        padding: 0.375rem 0.75rem;
+    }
+
+    /* Date inputs — pull the native calendar icon flush against the right edge
+       with zero gap, keep it visible in dark mode, and give it a subtle
+       interactive feel. */
+    input[type="date"] {
+        position: relative;
+        /* Shrink right padding so the picker indicator sits at the edge. */
+        padding-right: 0.375rem;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        margin-inline-start: auto;
+        margin-inline-end: 0;
+        padding: 0;
+        cursor: pointer;
+        opacity: 0.55;
+        transition: opacity 150ms ease;
+    }
+    input[type="date"]:hover::-webkit-calendar-picker-indicator,
+    input[type="date"]::-webkit-calendar-picker-indicator:hover {
+        opacity: 1;
+    }
+    .dark input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(0.85);
+        opacity: 0.75;
+    }
+    .dark input[type="date"]:hover::-webkit-calendar-picker-indicator {
+        opacity: 1;
+    }
+}
+
 [x-cloak] { display: none !important; }

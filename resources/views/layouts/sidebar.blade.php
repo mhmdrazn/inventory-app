@@ -70,9 +70,12 @@
     class="fixed inset-y-0 left-0 z-40 w-64 border-r bg-card flex flex-col transition-transform duration-200"
 >
     {{-- Brand --}}
-    <div class="flex h-14 items-center gap-2 border-b px-5">
-        <img src="{{ asset('img/logo.png') }}" alt="Warehaus" class="h-7 w-7">
-        <span class="font-bold text-base tracking-tight">Warehaus</span>
+    <div class="flex h-16 items-center gap-2.5 border-b px-5">
+        <img src="{{ asset('img/logo.png') }}" alt="Warehaus" class="h-8 w-8 shrink-0">
+        <div class="min-w-0 leading-tight">
+            <p class="font-bold text-base tracking-tight leading-none">Warehaus</p>
+            <p class="mt-1 text-[10px] font-medium tracking-wider text-muted-foreground truncate">Sistem Manajemen Inventori</p>
+        </div>
     </div>
 
     {{-- Nav --}}
@@ -113,7 +116,7 @@
 
         <form method="POST" action="{{ route('logout') }}">
             @csrf
-            <button type="submit" class="group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive">
+            <button type="submit" class="group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" /></svg>
                 <span>Keluar</span>
             </button>

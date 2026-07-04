@@ -70,7 +70,10 @@
                     </x-ui.select>
                 </div>
                 <div class="flex items-end gap-2">
-                    <x-ui.button type="submit" class="flex-1 w-full">Cari</x-ui.button>
+                    <x-ui.button type="submit" class="flex-1 w-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
+                        Cari
+                    </x-ui.button>
                     <x-ui.button variant="outline" :href="route('products.index')" class="flex-1 w-full">Reset</x-ui.button>
                 </div>
             </form>
@@ -97,7 +100,7 @@
                                 <tr class="border-b last:border-0 hover:bg-muted/30 transition-colors">
                                     <td class="px-6 py-3 font-mono text-xs">{{ $product->code }}</td>
                                     <td class="px-6 py-3 font-medium">
-                                        <a href="{{ route('products.show', $product) }}" class="hover:text-primary transition-colors">{{ $product->name }}</a>
+                                        <a href="{{ route('products.show', $product) }}" class="hover:text-foreground/70 transition-colors">{{ $product->name }}</a>
                                     </td>
                                     <td class="px-6 py-3 text-muted-foreground">{{ $product->category->name }}</td>
                                     <td class="px-6 py-3">
@@ -123,7 +126,13 @@
                                         <div class="flex items-center justify-end gap-1.5">
                                             <x-ui.button variant="outline" size="sm" :href="route('products.show', $product)">Detail</x-ui.button>
                                             @if(auth()->user()->hasRole('admin', 'staff'))
-                                                <x-ui.button variant="outline" size="sm" :href="route('products.edit', $product)">Edit</x-ui.button>
+                                                <x-ui.button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    @click="$dispatch('open-dialog', 'edit-product-{{ $product->id }}')"
+                                                >
+                                                    Edit
+                                                </x-ui.button>
                                                 <div x-data="{ showDeleteModal: false }" class="inline-flex">
                                                     <x-ui.button variant="soft-destructive" size="sm" @click="showDeleteModal = true">Hapus</x-ui.button>
                                                     <div x-show="showDeleteModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
@@ -148,6 +157,79 @@
                                         </div>
                                     </td>
                                 </tr>
+
+                                @if(auth()->user()->hasRole('admin', 'staff'))
+                                    {{-- Per-row Edit Product Dialog --}}
+                                    <x-ui.dialog
+                                        name="edit-product-{{ $product->id }}"
+                                        title="Edit Barang"
+                                        description="Perbarui detail barang."
+                                        maxWidth="2xl"
+                                    >
+                                        <form method="POST" action="{{ route('products.update', $product) }}" enctype="multipart/form-data" class="space-y-5">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                <div class="space-y-1.5">
+                                                    <x-ui.label for="edit-code-{{ $product->id }}" value="Kode Barang" />
+                                                    <x-ui.input id="edit-code-{{ $product->id }}" name="code" :value="old('code', $product->code)" required />
+                                                    <x-input-error :messages="$errors->get('code')" />
+                                                </div>
+                                                <div class="space-y-1.5">
+                                                    <x-ui.label for="edit-name-{{ $product->id }}" value="Nama Barang" />
+                                                    <x-ui.input id="edit-name-{{ $product->id }}" name="name" :value="old('name', $product->name)" required />
+                                                    <x-input-error :messages="$errors->get('name')" />
+                                                </div>
+                                                <div class="space-y-1.5">
+                                                    <x-ui.label for="edit-category-{{ $product->id }}" value="Kategori" />
+                                                    <x-ui.select id="edit-category-{{ $product->id }}" name="category_id" required>
+                                                        <option value="">Pilih Kategori</option>
+                                                        @foreach($categories as $c)
+                                                            <option value="{{ $c->id }}" {{ old('category_id', $product->category_id) == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
+                                                        @endforeach
+                                                    </x-ui.select>
+                                                    <x-input-error :messages="$errors->get('category_id')" />
+                                                </div>
+                                                <div class="space-y-1.5">
+                                                    <x-ui.label for="edit-stock-{{ $product->id }}" value="Stok" />
+                                                    <x-ui.input id="edit-stock-{{ $product->id }}" name="stock" type="number" min="0" :value="old('stock', $product->stock)" required />
+                                                    <x-input-error :messages="$errors->get('stock')" />
+                                                </div>
+                                                <div class="space-y-1.5 sm:col-span-2">
+                                                    <x-ui.label for="edit-location-{{ $product->id }}" value="Lokasi Penyimpanan" />
+                                                    <x-ui.input id="edit-location-{{ $product->id }}" name="location" :value="old('location', $product->location)" placeholder="contoh: Gudang IT Lt. 2" />
+                                                    <x-input-error :messages="$errors->get('location')" />
+                                                </div>
+                                                <div class="space-y-1.5">
+                                                    <x-ui.label for="edit-condition-{{ $product->id }}" value="Kondisi" />
+                                                    <x-ui.select id="edit-condition-{{ $product->id }}" name="condition" required>
+                                                        <option value="baik" {{ old('condition', $product->condition) === 'baik' ? 'selected' : '' }}>Baik</option>
+                                                        <option value="rusak_ringan" {{ old('condition', $product->condition) === 'rusak_ringan' ? 'selected' : '' }}>Rusak Ringan</option>
+                                                        <option value="rusak_berat" {{ old('condition', $product->condition) === 'rusak_berat' ? 'selected' : '' }}>Rusak Berat</option>
+                                                    </x-ui.select>
+                                                    <x-input-error :messages="$errors->get('condition')" />
+                                                </div>
+                                                <div class="space-y-1.5">
+                                                    <x-ui.label for="edit-image-{{ $product->id }}" value="Gambar (opsional)" />
+                                                    <input id="edit-image-{{ $product->id }}" name="image" type="file" accept="image/jpeg,image/png" class="flex h-9 w-full rounded-md border border-input bg-background text-sm file:mr-3 file:h-full file:border-0 file:border-r file:bg-muted file:px-3 file:text-xs file:font-medium file:text-foreground">
+                                                    <p class="text-xs text-muted-foreground">JPG/PNG, maks. 2MB. Kosongkan untuk mempertahankan gambar saat ini.</p>
+                                                    <x-input-error :messages="$errors->get('image')" />
+                                                </div>
+                                                @if($product->image)
+                                                    <div class="sm:col-span-2 flex items-center gap-3 rounded-md border bg-muted/40 p-3">
+                                                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" loading="lazy" decoding="async" class="h-14 w-14 rounded-md object-cover">
+                                                        <p class="text-xs text-muted-foreground">Gambar saat ini &mdash; akan dipertahankan jika kolom gambar dikosongkan.</p>
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            <div class="flex items-center justify-end gap-2 border-t pt-4">
+                                                <x-ui.button type="button" variant="outline" @click="$dispatch('close-dialog', 'edit-product-{{ $product->id }}')">Batal</x-ui.button>
+                                                <x-ui.button type="submit">Simpan Perubahan</x-ui.button>
+                                            </div>
+                                        </form>
+                                    </x-ui.dialog>
+                                @endif
                             @empty
                                 <tr>
                                     <td colspan="7" class="px-6 py-12 text-center text-sm text-muted-foreground">Belum ada data barang.</td>
@@ -169,7 +251,7 @@
             @if($products->count() > 0)
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     @foreach($products as $product)
-                        <a href="{{ route('products.show', $product) }}" class="group flex flex-col rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden transition-all hover:border-primary/40 hover:shadow-md">
+                        <a href="{{ route('products.show', $product) }}" class="group flex flex-col rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden transition-all hover:border-muted-foreground/40 hover:shadow-md">
                             <div class="block bg-muted aspect-video overflow-hidden">
                                 @if($product->image)
                                     <img src="{{ $product->image_url }}" alt="{{ $product->name }}" loading="lazy" decoding="async" class="h-full w-full object-cover transition-transform group-hover:scale-105">
@@ -182,7 +264,7 @@
                             <div class="flex flex-col flex-1 p-4 space-y-3">
                                 <div class="space-y-1">
                                     <p class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{{ $product->code }}</p>
-                                    <p class="font-semibold leading-tight group-hover:text-primary transition-colors line-clamp-2">{{ $product->name }}</p>
+                                    <p class="font-semibold leading-tight group-hover:text-foreground/80 transition-colors line-clamp-2">{{ $product->name }}</p>
                                     <p class="text-xs text-muted-foreground">{{ $product->category->name }}</p>
                                 </div>
                                 <div class="flex flex-wrap items-center gap-1.5">
@@ -288,6 +370,14 @@
             <script>
                 document.addEventListener('DOMContentLoaded', () => {
                     window.dispatchEvent(new CustomEvent('open-dialog', { detail: 'create-product' }));
+                });
+            </script>
+        @endif
+
+        @if(request('edit'))
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    window.dispatchEvent(new CustomEvent('open-dialog', { detail: 'edit-product-{{ (int) request('edit') }}' }));
                 });
             </script>
         @endif
