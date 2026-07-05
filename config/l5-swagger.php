@@ -136,12 +136,12 @@ return [
             /**
              * analyser: defaults to \OpenApi\StaticAnalyser .
              *
+             * Injected at runtime by AppServiceProvider so config:cache can serialize
+             * this file (ReflectionAnalyser has no __set_state()).
+             *
              * @see scan
              */
-            'analyser' => new \OpenApi\Analysers\ReflectionAnalyser([
-                new \OpenApi\Analysers\AttributeAnnotationFactory(),
-                new \OpenApi\Analysers\DocBlockAnnotationFactory(),
-            ]),
+            'analyser' => null,
 
             /**
              * analysis: defaults to a new \OpenApi\Analysis .
