@@ -9,7 +9,7 @@ use Illuminate\Database\Seeder;
 class ProductSeeder extends Seeder
 {
     /**
-     * Seed the products table with realistic Telkomsel office inventory.
+     * Seed the products table with a realistic office inventory sample.
      */
     public function run(): void
     {

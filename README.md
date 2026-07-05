@@ -154,9 +154,9 @@ After running `php artisan migrate:fresh --seed`, the following accounts are ava
 
 | Role    | Email                    | Password   | Access                                                      |
 |---------|--------------------------|------------|-------------------------------------------------------------|
-| Admin   | admin@telkomsel.test     | `password` | All modules: dashboard, product / category / user CRUD, reports |
-| Staff   | staff@telkomsel.test     | `password` | Product CRUD, borrowings, dashboard                         |
-| Manager | manager@telkomsel.test   | `password` | Read only: dashboard, reports, borrowing history            |
+| Admin   | admin@warehaus.test      | `password` | All modules: dashboard, product / category / user CRUD, reports |
+| Staff   | staff@warehaus.test      | `password` | Product CRUD, borrowings, dashboard                         |
+| Manager | manager@warehaus.test    | `password` | Read only: dashboard, reports, borrowing history            |
 
 ## REST API
 
@@ -178,7 +178,7 @@ To regenerate the spec on every request during development, set `L5_SWAGGER_GENE
 curl -X POST http://localhost:8000/api/v1/login \
   -H "Accept: application/json" \
   -H "Content-Type: application/json" \
-  -d '{"email":"admin@telkomsel.test","password":"password","device_name":"postman"}'
+  -d '{"email":"admin@warehaus.test","password":"password","device_name":"postman"}'
 ```
 
 Response:
@@ -189,7 +189,7 @@ Response:
   "message": "Login successful.",
   "data": {
     "token": "1|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    "user": { "id": 1, "name": "Admin", "email": "admin@telkomsel.test", "role": "admin" }
+    "user": { "id": 1, "name": "Admin", "email": "admin@warehaus.test", "role": "admin" }
   }
 }
 ```

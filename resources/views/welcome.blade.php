@@ -82,7 +82,7 @@
                 <div class="space-y-6">
                     <div class="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs font-medium">
                         <span class="inline-flex h-1.5 w-1.5 rounded-full bg-primary"></span>
-                        Prototype PT Telkomsel
+                        Prototype Warehaus
                     </div>
 
                     <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1]">
@@ -270,7 +270,7 @@
                 <div class="absolute inset-0 opacity-30" style="background-image: radial-gradient(circle at 25% 20%, rgba(255,255,255,0.2) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 40%);"></div>
                 <div class="relative space-y-4">
                     <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Siap merapikan inventaris?</h2>
-                    <p class="text-white/80 max-w-xl mx-auto">Warehaus adalah prototype sistem manajemen inventaris untuk seleksi magang Sistem Informasi PT Telkomsel.</p>
+                    <p class="text-white/80 max-w-xl mx-auto">Warehaus adalah prototype sistem manajemen inventaris berbasis web untuk mengelola stok, peminjaman, dan pelaporan barang perusahaan.</p>
                     <div class="flex flex-wrap items-center justify-center gap-3 pt-3">
                         @auth
                             <a href="{{ url('/dashboard') }}" class="inline-flex h-11 items-center gap-2 rounded-md bg-white px-6 text-sm font-semibold text-primary hover:bg-white/90 transition-colors">
@@ -297,7 +297,7 @@
         <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 sm:flex-row">
             <div class="flex items-center gap-2 text-sm text-muted-foreground">
                 <img src="{{ asset('img/logo.png') }}" alt="Warehaus" class="h-6 w-6">
-                <span>&copy; {{ date('Y') }} Warehaus &middot; Prototype PT Telkomsel</span>
+                <span>&copy; {{ date('Y') }} Warehaus</span>
             </div>
             <div class="flex items-center gap-6 text-sm text-muted-foreground">
                 <a href="#features" class="hover:text-foreground transition-colors">Fitur</a>

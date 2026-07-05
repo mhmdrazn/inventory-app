@@ -16,13 +16,13 @@
 
         <div class="space-y-1.5">
             <x-ui.label for="password" value="Kata Sandi Baru" />
-            <x-ui.input id="password" type="password" name="password" required autocomplete="new-password" placeholder="Minimal 8 karakter" />
+            <x-ui.password-input id="password" name="password" required autocomplete="new-password" placeholder="Minimal 8 karakter" />
             <x-input-error :messages="$errors->get('password')" />
         </div>
 
         <div class="space-y-1.5">
             <x-ui.label for="password_confirmation" value="Konfirmasi Kata Sandi" />
-            <x-ui.input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" placeholder="Ulangi kata sandi baru" />
+            <x-ui.password-input id="password_confirmation" name="password_confirmation" required autocomplete="new-password" placeholder="Ulangi kata sandi baru" />
             <x-input-error :messages="$errors->get('password_confirmation')" />
         </div>
 

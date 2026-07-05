@@ -189,11 +189,11 @@
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div class="space-y-1.5">
                                             <x-ui.label for="edit-password-{{ $u->id }}" value="Kata Sandi Baru" />
-                                            <x-ui.input id="edit-password-{{ $u->id }}" name="password" type="password" placeholder="Kosongkan jika tidak berubah" />
+                                            <x-ui.password-input id="edit-password-{{ $u->id }}" name="password" placeholder="Kosongkan jika tidak berubah" />
                                         </div>
                                         <div class="space-y-1.5">
                                             <x-ui.label for="edit-password-conf-{{ $u->id }}" value="Konfirmasi Kata Sandi" />
-                                            <x-ui.input id="edit-password-conf-{{ $u->id }}" name="password_confirmation" type="password" placeholder="Ulangi kata sandi baru" />
+                                            <x-ui.password-input id="edit-password-conf-{{ $u->id }}" name="password_confirmation" placeholder="Ulangi kata sandi baru" />
                                         </div>
                                     </div>
                                     <p class="text-xs text-muted-foreground">Kosongkan kolom kata sandi jika tidak ingin mengubahnya.</p>
@@ -235,7 +235,7 @@
             </div>
             <div class="space-y-1.5">
                 <x-ui.label for="new-email" value="Email" />
-                <x-ui.input id="new-email" name="email" type="email" :value="old('email')" required placeholder="nama@telkomsel.com" />
+                <x-ui.input id="new-email" name="email" type="email" :value="old('email')" required placeholder="nama@warehaus.test" />
                 <x-input-error :messages="$errors->get('email')" />
             </div>
             <div class="space-y-1.5">
@@ -251,12 +251,12 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="space-y-1.5">
                     <x-ui.label for="new-password" value="Kata Sandi" />
-                    <x-ui.input id="new-password" name="password" type="password" required placeholder="Minimal 8 karakter" />
+                    <x-ui.password-input id="new-password" name="password" required placeholder="Minimal 8 karakter" />
                     <x-input-error :messages="$errors->get('password')" />
                 </div>
                 <div class="space-y-1.5">
                     <x-ui.label for="new-password-conf" value="Konfirmasi Kata Sandi" />
-                    <x-ui.input id="new-password-conf" name="password_confirmation" type="password" required placeholder="Ulangi kata sandi" />
+                    <x-ui.password-input id="new-password-conf" name="password_confirmation" required placeholder="Ulangi kata sandi" />
                 </div>
             </div>
             <div class="flex items-center justify-end gap-2 border-t pt-4">

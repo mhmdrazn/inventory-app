@@ -4,7 +4,7 @@ Instructions for all AI coding agents (Claude Code, Cursor, Copilot) working on 
 
 ## Project Overview
 
-Inventory management web app for PT Telkomsel. Laravel 13 + Breeze (Blade/Alpine/Tailwind) with PostgreSQL via Supabase. Built as an internship selection challenge.
+Warehaus is a web based inventory management app. Laravel 13 + Breeze (Blade/Alpine/Tailwind) with PostgreSQL via Supabase.
 
 Full project context, schema, and test accounts are documented in `CLAUDE.md`. Database schema is defined in `schema.dbml`.
 

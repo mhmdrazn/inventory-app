@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Laporan Inventaris PT Telkomsel</title>
+    <title>Laporan Inventaris Warehaus</title>
     <style>
         * { box-sizing: border-box; }
         body {
@@ -101,7 +101,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>Laporan Inventaris PT Telkomsel</h1>
+        <h1>Laporan Inventaris Warehaus</h1>
         <div class="meta">
             Digenerate pada: {{ $generatedAt->translatedFormat('d F Y H:i') }} WIB
         </div>

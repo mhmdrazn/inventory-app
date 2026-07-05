@@ -15,7 +15,7 @@
 
         <div class="space-y-1.5">
             <x-ui.label for="email" value="Email" />
-            <x-ui.input id="email" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" placeholder="nama@telkomsel.com" />
+            <x-ui.input id="email" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" placeholder="nama@warehaus.test" />
             <x-input-error :messages="$errors->get('email')" />
         </div>
 
@@ -26,7 +26,7 @@
                     <a href="{{ route('password.request') }}" class="text-xs text-primary hover:underline">Lupa kata sandi?</a>
                 @endif
             </div>
-            <x-ui.input id="password" type="password" name="password" required autocomplete="current-password" placeholder="••••••••" />
+            <x-ui.password-input id="password" name="password" required autocomplete="current-password" />
             <x-input-error :messages="$errors->get('password')" />
         </div>
 

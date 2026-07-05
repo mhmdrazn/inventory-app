@@ -45,7 +45,7 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return $this->role->name === Role::ADMIN;
+        return $this->role?->name === Role::ADMIN;
     }
 
     /**
@@ -53,7 +53,7 @@ class User extends Authenticatable
      */
     public function isStaff(): bool
     {
-        return $this->role->name === Role::STAFF;
+        return $this->role?->name === Role::STAFF;
     }
 
     /**
@@ -61,7 +61,7 @@ class User extends Authenticatable
      */
     public function isManager(): bool
     {
-        return $this->role->name === Role::MANAGER;
+        return $this->role?->name === Role::MANAGER;
     }
 
     /**
@@ -69,6 +69,6 @@ class User extends Authenticatable
      */
     public function hasRole(string ...$roles): bool
     {
-        return in_array($this->role->name, $roles);
+        return $this->role !== null && in_array($this->role->name, $roles, true);
     }
 }

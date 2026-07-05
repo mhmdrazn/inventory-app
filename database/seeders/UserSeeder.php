@@ -17,20 +17,20 @@ class UserSeeder extends Seeder
 
         $users = [
             [
-                'name' => 'Admin Telkomsel',
-                'email' => 'admin@telkomsel.test',
+                'name' => 'Admin Warehaus',
+                'email' => 'admin@warehaus.test',
                 'password' => 'password',
                 'role' => Role::ADMIN,
             ],
             [
                 'name' => 'Staff Inventaris',
-                'email' => 'staff@telkomsel.test',
+                'email' => 'staff@warehaus.test',
                 'password' => 'password',
                 'role' => Role::STAFF,
             ],
             [
-                'name' => 'Manager Telkomsel',
-                'email' => 'manager@telkomsel.test',
+                'name' => 'Manager Warehaus',
+                'email' => 'manager@warehaus.test',
                 'password' => 'password',
                 'role' => Role::MANAGER,
             ],

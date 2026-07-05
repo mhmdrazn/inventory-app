@@ -9,7 +9,7 @@
 
         <div class="space-y-1.5">
             <x-ui.label for="password" value="Kata Sandi" />
-            <x-ui.input id="password" type="password" name="password" required autocomplete="current-password" placeholder="••••••••" autofocus />
+            <x-ui.password-input id="password" name="password" required autocomplete="current-password" autofocus />
             <x-input-error :messages="$errors->get('password')" />
         </div>
 

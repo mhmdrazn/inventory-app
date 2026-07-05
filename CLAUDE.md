@@ -1,6 +1,6 @@
-# Inventory App - PT Telkomsel
+# Warehaus - Inventory Management System
 
-Prototype Sistem Manajemen Inventaris Berbasis Web untuk seleksi magang Sistem Informasi PT Telkomsel.
+Prototype Sistem Manajemen Inventaris Berbasis Web untuk mengelola stok, peminjaman, dan pelaporan barang perusahaan.
 
 ## Tech Stack
 
@@ -59,9 +59,9 @@ vendor/bin/pint --dirty            # format changed PHP files
 
 | Role    | Email                    | Password |
 |---------|--------------------------|----------|
-| Admin   | admin@telkomsel.test     | password |
-| Staff   | staff@telkomsel.test     | password |
-| Manager | manager@telkomsel.test   | password |
+| Admin   | admin@warehaus.test      | password |
+| Staff   | staff@warehaus.test      | password |
+| Manager | manager@warehaus.test    | password |
 
 ## File Structure
 

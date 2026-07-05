@@ -19,15 +19,15 @@ class UserSeederTest extends TestCase
         Role::create(['name' => Role::MANAGER]);
 
         User::create([
-            'name' => 'Admin Telkomsel',
-            'email' => 'admin@telkomsel.test',
+            'name' => 'Admin Warehaus',
+            'email' => 'admin@warehaus.test',
             'password' => 'password',
             'role_id' => null,
         ]);
 
         (new UserSeeder)->run();
 
-        $user = User::where('email', 'admin@telkomsel.test')->with('role')->firstOrFail();
+        $user = User::where('email', 'admin@warehaus.test')->with('role')->firstOrFail();
 
         $this->assertSame($adminRole->id, $user->role_id);
         $this->assertSame(Role::ADMIN, $user->role?->name);

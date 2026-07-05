@@ -15,7 +15,7 @@
 
         <div class="space-y-1.5">
             <x-ui.label for="email" value="Email" />
-            <x-ui.input id="email" type="email" name="email" :value="old('email')" required autofocus placeholder="nama@telkomsel.com" />
+            <x-ui.input id="email" type="email" name="email" :value="old('email')" required autofocus placeholder="nama@warehaus.test" />
             <x-input-error :messages="$errors->get('email')" />
         </div>
 

@@ -24,7 +24,7 @@
     </head>
     <body class="font-sans antialiased bg-background text-foreground">
         {{-- Theme toggle top-right --}}
-        <div class="absolute right-4 top-4 sm:right-6 sm:top-6">
+        <div class="absolute right-4 top-4 sm:right-6 sm:top-6 z-20">
             <button
                 type="button"
                 x-data="{
@@ -44,32 +44,84 @@
             </button>
         </div>
 
-        <div class="grid min-h-screen lg:grid-cols-2">
+        <div class="grid min-h-screen lg:grid-cols-[1.1fr_1fr]">
             {{-- Left: brand column --}}
-            <div class="relative hidden lg:flex flex-col justify-between p-10 overflow-hidden text-white" style="background: linear-gradient(135deg, #ff0021 0%, #b3001c 45%, #0a1f44 100%);">
-                {{-- Decorative pattern --}}
-                <div class="absolute inset-0 opacity-30" style="background-image: radial-gradient(circle at 25% 20%, rgba(255,255,255,0.2) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 40%);"></div>
+            <div class="relative hidden lg:flex flex-col justify-between p-12 overflow-hidden text-white"
+                 style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #0b1a3a 100%);">
 
-                <div class="relative flex items-center gap-2">
-                    <img src="{{ asset('img/logo.png') }}" alt="Warehaus" class="h-9 w-9">
+                {{-- Aurora blobs --}}
+                <div class="pointer-events-none absolute -top-32 -left-24 h-96 w-96 rounded-full opacity-40 blur-3xl"
+                     style="background: radial-gradient(circle, #3b82f6 0%, transparent 70%);"></div>
+                <div class="pointer-events-none absolute -bottom-24 -right-16 h-[28rem] w-[28rem] rounded-full opacity-30 blur-3xl"
+                     style="background: radial-gradient(circle, #8b5cf6 0%, transparent 70%);"></div>
+                <div class="pointer-events-none absolute top-1/3 right-1/4 h-64 w-64 rounded-full opacity-20 blur-3xl"
+                     style="background: radial-gradient(circle, #06b6d4 0%, transparent 70%);"></div>
+
+                {{-- Subtle grid overlay --}}
+                <div class="pointer-events-none absolute inset-0 opacity-[0.07]"
+                     style="background-image: linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px); background-size: 44px 44px;"></div>
+
+                {{-- Top: logo --}}
+                <div class="relative flex items-center gap-2.5">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur ring-1 ring-white/20">
+                        <img src="{{ asset('img/logo.png') }}" alt="Warehaus" class="h-6 w-6">
+                    </div>
                     <span class="font-bold text-lg tracking-tight">Warehaus</span>
                 </div>
 
-                <div class="relative space-y-6 max-w-md">
-                    <blockquote class="text-2xl font-semibold leading-snug tracking-tight">
-                        Kelola inventaris dan peminjaman barang perusahaan dengan lebih terorganisir dan efisien.
-                    </blockquote>
-                    <div class="flex items-center gap-3">
-                        <div class="h-10 w-10 rounded-full bg-white/15 backdrop-blur flex items-center justify-center text-sm font-semibold">PT</div>
-                        <div class="text-sm">
-                            <p class="font-medium">PT Telkomsel</p>
-                            <p class="text-white/70">Sistem Manajemen Inventaris</p>
-                        </div>
+                {{-- Middle: headline + feature list --}}
+                <div class="relative space-y-8 max-w-md">
+                    <div class="space-y-4">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium ring-1 ring-white/15 backdrop-blur">
+                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            Sistem Manajemen Inventaris
+                        </span>
+                        <h2 class="text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
+                            Kelola inventaris dan peminjaman dengan lebih rapi.
+                        </h2>
+                        <p class="text-white/70 leading-relaxed">
+                            Pantau stok, catat peminjaman, dan hasilkan laporan realtime dalam satu tempat.
+                        </p>
                     </div>
+
+                    <ul class="space-y-3.5">
+                        <li class="flex items-start gap-3">
+                            <span class="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-md bg-white/10 ring-1 ring-white/15">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                            </span>
+                            <div>
+                                <p class="text-sm font-medium">Pencatatan stok terpusat</p>
+                                <p class="text-xs text-white/60">Setiap produk, lokasi, dan kondisi terlacak.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-md bg-white/10 ring-1 ring-white/15">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                            </span>
+                            <div>
+                                <p class="text-sm font-medium">Peminjaman aman dari race condition</p>
+                                <p class="text-xs text-white/60">Validasi stok terkunci dalam transaksi database.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-md bg-white/10 ring-1 ring-white/15">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                            </span>
+                            <div>
+                                <p class="text-sm font-medium">Laporan PDF dan Excel siap unduh</p>
+                                <p class="text-xs text-white/60">Ekspor riwayat inventaris dan peminjaman kapan saja.</p>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
 
-                <div class="relative text-xs text-white/60">
-                    &copy; {{ date('Y') }} PT Telkomsel · Prototype
+                {{-- Bottom: footer --}}
+                <div class="relative flex items-center justify-between text-xs text-white/50">
+                    <span>&copy; {{ date('Y') }} Warehaus</span>
+                    <span class="inline-flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                        Data Anda aman
+                    </span>
                 </div>
             </div>
 
