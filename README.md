@@ -41,6 +41,20 @@ Warehaus is a web based inventory management prototype that helps warehouse admi
 | Build         | Vite                                                          |
 | Deployment    | Railway (Nixpacks) or Docker (FrankenPHP)                     |
 
+## Roles and Permissions
+
+| Capability                        | :shield: Admin | :wrench: Staff | :bar_chart: Manager |
+|-----------------------------------|:--------------:|:--------------:|:-------------------:|
+| View dashboard                    | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| View borrowing trend chart        | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| Create / edit / delete products   | :white_check_mark: | :white_check_mark: | :x:                |
+| Create / edit / delete categories | :white_check_mark: | :x:                | :x:                |
+| Create borrowings                 | :white_check_mark: | :white_check_mark: | :x:                |
+| Process returns                   | :white_check_mark: | :white_check_mark: | :x:                |
+| View borrowing history            | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| Export reports (PDF / Excel)      | :white_check_mark: | :x:                | :white_check_mark: |
+| Manage users and roles            | :white_check_mark: | :x:                | :x:                |
+
 ## Database Schema
 
 The database schema is defined in DBML in [`schema.dbml`](./schema.dbml). Paste that file into [dbdiagram.io](https://dbdiagram.io/) to render an interactive ERD.
@@ -259,20 +273,6 @@ Format PHP files with Pint before committing:
 ```bash
 vendor/bin/pint --dirty --format agent
 ```
-
-## Roles and Permissions
-
-| Capability                  | Admin | Staff | Manager |
-|-----------------------------|:-----:|:-----:|:-------:|
-| View dashboard              | Yes   | Yes   | Yes     |
-| View borrowing trend chart  | Yes   | Yes   | Yes     |
-| Create / edit / delete products | Yes | Yes | No     |
-| Create / edit / delete categories | Yes | No | No    |
-| Create borrowings           | Yes   | Yes   | No      |
-| Process returns             | Yes   | Yes   | No      |
-| View borrowing history      | Yes   | Yes   | Yes     |
-| Export reports (PDF / Excel) | Yes  | No    | Yes     |
-| Manage users and roles      | Yes   | No    | No      |
 
 ## Deployment (Railway)
 
