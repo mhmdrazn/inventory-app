@@ -2,8 +2,6 @@
 
 Warehaus is a web based inventory management prototype that helps warehouse admins and staff track stock, log borrowings and returns, and produce real time inventory reports. The system exposes both a full Blade based web UI and a versioned REST API.
 
-> **Demo:** Coming soon (Railway deployment).
-
 ## Features
 
 ### Core
@@ -16,7 +14,7 @@ Warehaus is a web based inventory management prototype that helps warehouse admi
 - **Dashboard**. Summary cards (total stock, currently borrowed, available, category count), a 12 month borrowing trend chart (Chart.js), latest borrowings table, low stock table, and an overdue list.
 - **User Management**. Admin only CRUD for users and role assignment.
 
-### Bonus
+### Additional
 
 - :page_facing_up: **PDF export** of inventory reports and borrowing history via `barryvdh/laravel-dompdf`.
 - :bar_chart: **Excel export** with two sheets (Inventory, Borrowings) via `maatwebsite/excel`.
@@ -35,7 +33,7 @@ Warehaus is a web based inventory management prototype that helps warehouse admi
 | Auth Scaffold | Laravel Breeze (Blade preset)                                 |
 | API Auth      | Laravel Sanctum                                               |
 | API Docs      | darkaonline/l5-swagger (OpenAPI 3.0)                          |
-| Database      | PostgreSQL (Supabase, transaction pooler on port 6543)        |
+| Database      | PostgreSQL (Supabase)        |
 | PDF Export    | barryvdh/laravel-dompdf                                       |
 | Excel Export  | maatwebsite/excel                                             |
 | Testing       | PHPUnit 12                                                    |
