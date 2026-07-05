@@ -46,7 +46,7 @@ class ProductController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('products', 'public');
+            $data['image'] = $request->file('image')->store('products', 'supabase');
         }
 
         Product::create($data);
@@ -80,9 +80,9 @@ class ProductController extends Controller
 
         if ($request->hasFile('image')) {
             if ($product->image) {
-                Storage::disk('public')->delete($product->image);
+                Storage::disk('supabase')->delete($product->image);
             }
-            $data['image'] = $request->file('image')->store('products', 'public');
+            $data['image'] = $request->file('image')->store('products', 'supabase');
         }
 
         $product->update($data);
@@ -105,7 +105,7 @@ class ProductController extends Controller
         }
 
         if ($product->image) {
-            Storage::disk('public')->delete($product->image);
+            Storage::disk('supabase')->delete($product->image);
         }
 
         $product->delete();

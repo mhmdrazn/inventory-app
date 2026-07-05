@@ -59,7 +59,7 @@ class Product extends Model
     /**
      * Resolve `image` to a full displayable URL:
      * - remote http(s) URLs are returned unchanged
-     * - local paths go through Storage::url()
+     * - local paths go through Supabase Storage public URL
      * - empty stays null
      */
     protected function imageUrl(): Attribute
@@ -73,7 +73,7 @@ class Product extends Model
                     return $this->image;
                 }
 
-                return Storage::url($this->image);
+                return Storage::disk('supabase')->url($this->image);
             },
         );
     }

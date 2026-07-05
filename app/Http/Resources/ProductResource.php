@@ -25,7 +25,7 @@ class ProductResource extends JsonResource
             'stock' => $this->stock,
             'location' => $this->location,
             'condition' => $this->condition,
-            'image_url' => $this->image ? asset('storage/'.$this->image) : null,
+            'image_url' => $this->image_url,
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
         ];
