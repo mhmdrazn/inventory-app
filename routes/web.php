@@ -9,9 +9,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', '/login');
 
 // Authenticated routes
 Route::middleware(['auth', 'verified'])->group(function () {
