@@ -15,6 +15,8 @@ class ProductController extends Controller
 {
     public function index(Request $request): View
     {
+        $this->authorize('viewAny', Product::class);
+
         $products = Product::with('category')
             ->search($request->input('search'))
             ->when($request->input('category'), fn ($query, $categoryId) => $query->where('category_id', $categoryId))
@@ -30,6 +32,8 @@ class ProductController extends Controller
 
     public function create(): View
     {
+        $this->authorize('create', Product::class);
+
         $categories = Category::orderBy('name')->get();
 
         return view('products.create', compact('categories'));
@@ -37,6 +41,8 @@ class ProductController extends Controller
 
     public function store(StoreProductRequest $request): RedirectResponse
     {
+        $this->authorize('create', Product::class);
+
         $data = $request->validated();
 
         if ($request->hasFile('image')) {
@@ -51,6 +57,8 @@ class ProductController extends Controller
 
     public function show(Product $product): View
     {
+        $this->authorize('view', $product);
+
         $product->load(['category', 'borrowingDetails.borrowing']);
         $categories = Category::orderBy('name')->get();
 
@@ -59,11 +67,15 @@ class ProductController extends Controller
 
     public function edit(Product $product): RedirectResponse
     {
+        $this->authorize('update', $product);
+
         return redirect()->route('products.index', ['edit' => $product->id]);
     }
 
     public function update(UpdateProductRequest $request, Product $product): RedirectResponse
     {
+        $this->authorize('update', $product);
+
         $data = $request->validated();
 
         if ($request->hasFile('image')) {
@@ -81,6 +93,8 @@ class ProductController extends Controller
 
     public function destroy(Product $product): RedirectResponse
     {
+        $this->authorize('delete', $product);
+
         $activeBorrowings = $product->borrowingDetails()
             ->whereHas('borrowing', fn ($query) => $query->where('status', 'dipinjam'))
             ->exists();

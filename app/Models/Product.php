@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,6 +14,9 @@ use Illuminate\Support\Str;
 
 class Product extends Model
 {
+    /** @use HasFactory<ProductFactory> */
+    use HasFactory;
+
     /**
      * @var list<string>
      */
@@ -85,9 +90,11 @@ class Product extends Model
             return $query;
         }
 
-        return $query->where(function (Builder $q) use ($search): void {
-            $q->where('name', 'ilike', "%{$search}%")
-                ->orWhere('code', 'ilike', "%{$search}%");
+        $term = '%'.mb_strtolower($search).'%';
+
+        return $query->where(function (Builder $q) use ($term): void {
+            $q->whereRaw('LOWER(name) LIKE ?', [$term])
+                ->orWhereRaw('LOWER(code) LIKE ?', [$term]);
         });
     }
 

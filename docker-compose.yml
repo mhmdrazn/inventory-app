@@ -1,0 +1,83 @@
+# Local development stack for Warehaus.
+#
+# Services:
+#   app    — Laravel app (uses the same Dockerfile as production, but runs against
+#            the local postgres service instead of Supabase).
+#   nginx  — reverse proxy in front of the app (public entry point on :8080).
+#   db     — postgres 16 for local development. Data persisted in a named volume.
+#
+# Quick start (from a clean checkout):
+#   cp .env.example .env
+#   # edit .env: set DB_HOST=db DB_PORT=5432 DB_DATABASE=warehaus DB_USERNAME=warehaus DB_PASSWORD=warehaus
+#   docker compose up -d --build
+#   docker compose exec app php artisan key:generate
+#   docker compose exec app php artisan migrate --seed
+#   # open http://localhost:8080
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: warehaus_app
+    working_dir: /app
+    environment:
+      # Point the app at the local postgres service.
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE:-warehaus}
+      DB_USERNAME: ${DB_USERNAME:-warehaus}
+      DB_PASSWORD: ${DB_PASSWORD:-warehaus}
+      DB_CONNECTION: pgsql
+      PORT: 8080
+    depends_on:
+      db:
+        condition: service_healthy
+    expose:
+      - "8080"
+    networks:
+      - warehaus
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: warehaus_nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    networks:
+      - warehaus
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    container_name: warehaus_db
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-warehaus}
+      POSTGRES_USER: ${DB_USERNAME:-warehaus}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-warehaus}
+    volumes:
+      - warehaus_pgdata:/var/lib/postgresql/data
+    ports:
+      # Expose only for local tooling (psql, pgAdmin). Comment out for stricter isolation.
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-warehaus} -d ${DB_DATABASE:-warehaus}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - warehaus
+    restart: unless-stopped
+
+volumes:
+  warehaus_pgdata:
+    name: warehaus_pgdata
+
+networks:
+  warehaus:
+    name: warehaus
+    driver: bridge

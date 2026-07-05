@@ -16,9 +16,11 @@ class BorrowingController extends Controller
 {
     public function index(Request $request): View
     {
+        $this->authorize('viewAny', Borrowing::class);
+
         $borrowings = Borrowing::with(['user', 'borrowingDetails'])
             ->when($request->input('status'), fn ($query, $status) => $query->where('status', $status))
-            ->when($request->input('search'), fn ($query, $search) => $query->where('borrower_name', 'ilike', "%{$search}%"))
+            ->when($request->input('search'), fn ($query, $search) => $query->whereRaw('LOWER(borrower_name) LIKE ?', ['%'.mb_strtolower($search).'%']))
             ->when($request->input('date_from'), fn ($query, $date) => $query->where('borrowed_at', '>=', $date))
             ->when($request->input('date_to'), fn ($query, $date) => $query->where('borrowed_at', '<=', $date))
             ->latest()
@@ -34,6 +36,8 @@ class BorrowingController extends Controller
 
     public function create(): View
     {
+        $this->authorize('create', Borrowing::class);
+
         $products = Product::available()->orderBy('name')->get();
 
         return view('borrowings.create', compact('products'));
@@ -41,6 +45,8 @@ class BorrowingController extends Controller
 
     public function store(StoreBorrowingRequest $request): RedirectResponse
     {
+        $this->authorize('create', Borrowing::class);
+
         $validated = $request->validated();
 
         DB::transaction(function () use ($validated, $request): void {
@@ -76,6 +82,8 @@ class BorrowingController extends Controller
 
     public function show(Borrowing $borrowing): View
     {
+        $this->authorize('view', $borrowing);
+
         $borrowing->load(['user', 'approver', 'borrowingDetails.product']);
 
         return view('borrowings.show', compact('borrowing'));
@@ -83,21 +91,29 @@ class BorrowingController extends Controller
 
     public function edit(Borrowing $borrowing): View
     {
+        $this->authorize('update', $borrowing);
+
         return view('borrowings.edit', compact('borrowing'));
     }
 
     public function update(Request $request, Borrowing $borrowing): RedirectResponse
     {
+        $this->authorize('update', $borrowing);
+
         abort(501, 'Belum diimplementasikan.');
     }
 
     public function destroy(Borrowing $borrowing): RedirectResponse
     {
+        $this->authorize('delete', $borrowing);
+
         abort(501, 'Belum diimplementasikan.');
     }
 
     public function returnItems(Borrowing $borrowing): RedirectResponse
     {
+        $this->authorize('return', $borrowing);
+
         if ($borrowing->status !== 'dipinjam') {
             return redirect()->route('borrowings.show', $borrowing)
                 ->with('error', 'Peminjaman ini sudah dikembalikan.');

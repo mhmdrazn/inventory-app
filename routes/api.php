@@ -30,6 +30,8 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         $token = $user->createToken($credentials['device_name'] ?? 'api-token')->plainTextToken;
 
         return response()->json([
+            'success' => true,
+            'message' => 'Login successful.',
             'data' => [
                 'token' => $token,
                 'user' => [
@@ -39,8 +41,6 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
                     'role' => $user->role?->name,
                 ],
             ],
-            'message' => 'Login successful.',
-            'status' => 200,
         ]);
     });
 
@@ -49,9 +49,9 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             $request->user()->currentAccessToken()?->delete();
 
             return response()->json([
-                'data' => null,
+                'success' => true,
                 'message' => 'Logged out successfully.',
-                'status' => 200,
+                'data' => null,
             ]);
         });
 
@@ -59,14 +59,14 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             $user = $request->user()->load('role');
 
             return response()->json([
+                'success' => true,
+                'message' => 'Authenticated user retrieved.',
                 'data' => [
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
                     'role' => $user->role?->name,
                 ],
-                'message' => 'Authenticated user retrieved.',
-                'status' => 200,
             ]);
         });
 

@@ -2,18 +2,55 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Controllers\Api\Concerns\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Borrowing;
 use App\Models\BorrowingDetail;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
+    use ApiResponse;
+
+    /**
+     * @OA\Get(
+     *   path="/api/v1/dashboard/stats",
+     *   tags={"Dashboard"},
+     *   summary="Aggregate KPIs and 12-month borrowing trend",
+     *   security={{"sanctum":{}}},
+     *   @OA\Response(
+     *     response=200,
+     *     description="OK",
+     *     @OA\JsonContent(
+     *       allOf={
+     *         @OA\Schema(ref="#/components/schemas/ApiEnvelope"),
+     *         @OA\Schema(
+     *           @OA\Property(
+     *             property="data",
+     *             type="object",
+     *             @OA\Property(property="total_stock", type="integer"),
+     *             @OA\Property(property="borrowed_count", type="integer"),
+     *             @OA\Property(property="available_stock", type="integer"),
+     *             @OA\Property(property="total_categories", type="integer"),
+     *             @OA\Property(property="total_products", type="integer"),
+     *             @OA\Property(property="low_stock_products", type="integer"),
+     *             @OA\Property(property="active_borrowings", type="integer"),
+     *             @OA\Property(property="overdue_borrowings", type="integer"),
+     *             @OA\Property(property="monthly_trends", type="array", @OA\Items(type="object",
+     *               @OA\Property(property="month", type="string", example="2026-07"),
+     *               @OA\Property(property="total", type="integer")
+     *             ))
+     *           )
+     *         )
+     *       }
+     *     )
+     *   )
+     * )
+     */
     public function stats(): JsonResponse
     {
         $totalStock = (int) Product::sum('stock');
@@ -41,22 +78,18 @@ class DashboardController extends Controller
             ];
         }
 
-        return response()->json([
-            'data' => [
-                'total_stock' => $totalStock,
-                'borrowed_count' => $borrowedCount,
-                'available_stock' => $availableStock,
-                'total_categories' => Category::count(),
-                'total_products' => Product::count(),
-                'low_stock_products' => Product::where('stock', '<=', 5)->count(),
-                'active_borrowings' => Borrowing::where('status', 'dipinjam')->count(),
-                'overdue_borrowings' => Borrowing::where('status', 'dipinjam')
-                    ->where('due_at', '<', Carbon::today())
-                    ->count(),
-                'monthly_trends' => $trends,
-            ],
-            'message' => 'Dashboard stats retrieved successfully.',
-            'status' => Response::HTTP_OK,
-        ]);
+        return $this->success([
+            'total_stock' => $totalStock,
+            'borrowed_count' => $borrowedCount,
+            'available_stock' => $availableStock,
+            'total_categories' => Category::count(),
+            'total_products' => Product::count(),
+            'low_stock_products' => Product::where('stock', '<=', 5)->count(),
+            'active_borrowings' => Borrowing::where('status', 'dipinjam')->count(),
+            'overdue_borrowings' => Borrowing::where('status', 'dipinjam')
+                ->where('due_at', '<', Carbon::today())
+                ->count(),
+            'monthly_trends' => $trends,
+        ], 'Dashboard stats retrieved successfully.');
     }
 }

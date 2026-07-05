@@ -17,9 +17,10 @@ class UserController extends Controller
     {
         $users = User::with('role')
             ->when($request->input('search'), function ($query, $search): void {
-                $query->where(function ($q) use ($search): void {
-                    $q->where('name', 'ilike', "%{$search}%")
-                        ->orWhere('email', 'ilike', "%{$search}%");
+                $term = '%'.mb_strtolower($search).'%';
+                $query->where(function ($q) use ($term): void {
+                    $q->whereRaw('LOWER(name) LIKE ?', [$term])
+                        ->orWhereRaw('LOWER(email) LIKE ?', [$term]);
                 });
             })
             ->when($request->input('role'), fn ($query, $roleId) => $query->where('role_id', $roleId))

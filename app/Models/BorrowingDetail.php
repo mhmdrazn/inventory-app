@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+use Database\Factories\BorrowingDetailFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BorrowingDetail extends Model
 {
+    /** @use HasFactory<BorrowingDetailFactory> */
+    use HasFactory;
+
     /**
      * @var list<string>
      */
