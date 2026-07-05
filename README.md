@@ -260,18 +260,19 @@ Format PHP files with Pint before committing:
 vendor/bin/pint --dirty --format agent
 ```
 
-## Screenshots
+## Roles and Permissions
 
-Placeholders. These will be added after deployment.
-
-| Page                   | Preview       |
-|------------------------|---------------|
-| Login                  | _coming soon_ |
-| Dashboard              | _coming soon_ |
-| Product Management     | _coming soon_ |
-| Borrowings             | _coming soon_ |
-| Reports and PDF Export | _coming soon_ |
-| Dark Mode              | _coming soon_ |
+| Capability                  | Admin | Staff | Manager |
+|-----------------------------|:-----:|:-----:|:-------:|
+| View dashboard              | Yes   | Yes   | Yes     |
+| View borrowing trend chart  | Yes   | Yes   | Yes     |
+| Create / edit / delete products | Yes | Yes | No     |
+| Create / edit / delete categories | Yes | No | No    |
+| Create borrowings           | Yes   | Yes   | No      |
+| Process returns             | Yes   | Yes   | No      |
+| View borrowing history      | Yes   | Yes   | Yes     |
+| Export reports (PDF / Excel) | Yes  | No    | Yes     |
+| Manage users and roles      | Yes   | No    | No      |
 
 ## Deployment (Railway)
 
