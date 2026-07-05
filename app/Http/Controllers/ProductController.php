@@ -17,12 +17,14 @@ class ProductController extends Controller
     {
         $this->authorize('viewAny', Product::class);
 
+        $perPage = in_array((int) $request->input('per_page'), [10, 25, 50, 100]) ? (int) $request->input('per_page') : 50;
+
         $products = Product::with('category')
             ->search($request->input('search'))
             ->when($request->input('category'), fn ($query, $categoryId) => $query->where('category_id', $categoryId))
             ->when($request->input('condition'), fn ($query, $condition) => $query->where('condition', $condition))
             ->latest()
-            ->paginate(10)
+            ->paginate($perPage)
             ->withQueryString();
 
         $categories = Category::orderBy('name')->get();

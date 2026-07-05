@@ -33,7 +33,8 @@ Warehaus is a web based inventory management prototype that helps warehouse admi
 | Auth Scaffold | Laravel Breeze (Blade preset)                                 |
 | API Auth      | Laravel Sanctum                                               |
 | API Docs      | darkaonline/l5-swagger (OpenAPI 3.0)                          |
-| Database      | PostgreSQL (Supabase)        |
+| Database      | PostgreSQL (Supabase)                                         |
+| File Storage  | Supabase Storage (S3-compatible)                              |
 | PDF Export    | barryvdh/laravel-dompdf                                       |
 | Excel Export  | maatwebsite/excel                                             |
 | Testing       | PHPUnit 12                                                    |
@@ -91,10 +92,18 @@ php artisan key:generate
 # DB_USERNAME=<user>
 # DB_PASSWORD=<password>
 
-# 7. Run migrations with seed data (roles, users, categories, products)
+# 7. Configure Supabase Storage (for product image uploads)
+# SUPABASE_STORAGE_KEY=<s3-access-key>
+# SUPABASE_STORAGE_SECRET=<s3-secret-key>
+# SUPABASE_STORAGE_REGION=ap-southeast-1
+# SUPABASE_STORAGE_BUCKET=products
+# SUPABASE_STORAGE_ENDPOINT=https://<project-ref>.supabase.co/storage/v1/s3
+# SUPABASE_STORAGE_URL=https://<project-ref>.supabase.co/storage/v1/object/public/products
+
+# 8. Run migrations with seed data (roles, users, categories, products)
 php artisan migrate:fresh --seed
 
-# 8. Create the storage symlink (required for product image uploads)
+# 9. Create the storage symlink (for local development fallback)
 php artisan storage:link
 ```
 
@@ -278,6 +287,12 @@ Placeholders. These will be added after deployment.
    DB_DATABASE=postgres
    DB_USERNAME=<user>
    DB_PASSWORD=<password>
+   SUPABASE_STORAGE_KEY=<s3-access-key>
+   SUPABASE_STORAGE_SECRET=<s3-secret-key>
+   SUPABASE_STORAGE_REGION=ap-southeast-1
+   SUPABASE_STORAGE_BUCKET=products
+   SUPABASE_STORAGE_ENDPOINT=https://<project-ref>.supabase.co/storage/v1/s3
+   SUPABASE_STORAGE_URL=https://<project-ref>.supabase.co/storage/v1/object/public/products
    ```
 4. Railway will pick up `nixpacks.toml` for the build and `Procfile` for the start command.
 5. After the first deploy, run `php artisan migrate --force` from the Railway shell.

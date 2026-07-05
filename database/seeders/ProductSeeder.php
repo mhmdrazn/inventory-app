@@ -49,17 +49,27 @@ class ProductSeeder extends Seeder
             $seed = crc32($product['code']);
             $imageUrl = "https://loremflickr.com/600/400/{$product['image_keyword']}?lock={$seed}";
 
-            Product::updateOrCreate(
-                ['code' => $product['code']],
-                [
+            $existing = Product::where('code', $product['code'])->first();
+
+            if ($existing) {
+                $existing->update([
+                    'name' => $product['name'],
+                    'category_id' => $categories[$product['category']]->id,
+                    'stock' => $product['stock'],
+                    'location' => $product['location'],
+                    'condition' => $product['condition'],
+                ]);
+            } else {
+                Product::create([
+                    'code' => $product['code'],
                     'name' => $product['name'],
                     'category_id' => $categories[$product['category']]->id,
                     'stock' => $product['stock'],
                     'location' => $product['location'],
                     'condition' => $product['condition'],
                     'image' => $imageUrl,
-                ],
-            );
+                ]);
+            }
         }
     }
 }

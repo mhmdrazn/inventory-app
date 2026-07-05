@@ -22,13 +22,17 @@ class DashboardController extends Controller
      *   tags={"Dashboard"},
      *   summary="Aggregate KPIs and 12-month borrowing trend",
      *   security={{"sanctum":{}}},
+     *
      *   @OA\Response(
      *     response=200,
      *     description="OK",
+     *
      *     @OA\JsonContent(
      *       allOf={
+     *
      *         @OA\Schema(ref="#/components/schemas/ApiEnvelope"),
      *         @OA\Schema(
+     *
      *           @OA\Property(
      *             property="data",
      *             type="object",
@@ -58,7 +62,7 @@ class DashboardController extends Controller
             'borrowing',
             fn ($q) => $q->where('status', 'dipinjam'),
         )->sum('quantity');
-        $availableStock = $totalStock - $borrowedCount;
+        $availableProductTypes = Product::where('stock', '>', 0)->count();
 
         $monthly = Borrowing::select(
             DB::raw("to_char(borrowed_at, 'YYYY-MM') as month"),
@@ -81,7 +85,7 @@ class DashboardController extends Controller
         return $this->success([
             'total_stock' => $totalStock,
             'borrowed_count' => $borrowedCount,
-            'available_stock' => $availableStock,
+            'available_product_types' => $availableProductTypes,
             'total_categories' => Category::count(),
             'total_products' => Product::count(),
             'low_stock_products' => Product::where('stock', '<=', 5)->count(),

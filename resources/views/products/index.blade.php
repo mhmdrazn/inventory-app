@@ -238,11 +238,20 @@
                         </tbody>
                     </table>
                 </div>
-                @if($products->hasPages())
-                    <div class="border-t p-4">
-                        {{ $products->links() }}
+                <div class="flex items-center justify-between border-t p-4">
+                    <div class="flex items-center gap-2 text-sm text-muted-foreground">
+                        <span>Tampilkan</span>
+                        <select onchange="window.location.href=this.value" class="h-8 rounded-md border border-input bg-background px-2 text-sm">
+                            @foreach([10, 25, 50, 100] as $size)
+                                <option value="{{ request()->fullUrlWithQuery(['per_page' => $size, 'page' => 1]) }}" {{ $products->perPage() == $size ? 'selected' : '' }}>{{ $size }}</option>
+                            @endforeach
+                        </select>
+                        <span>dari {{ $products->total() }} barang</span>
                     </div>
-                @endif
+                    @if($products->hasPages())
+                        <div>{{ $products->links() }}</div>
+                    @endif
+                </div>
             </x-ui.card>
         </div>
 
@@ -288,11 +297,20 @@
                         </a>
                     @endforeach
                 </div>
-                @if($products->hasPages())
-                    <div class="mt-6">
-                        {{ $products->links() }}
+                <div class="mt-6 flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-sm text-muted-foreground">
+                        <span>Tampilkan</span>
+                        <select onchange="window.location.href=this.value" class="h-8 rounded-md border border-input bg-background px-2 text-sm">
+                            @foreach([10, 25, 50, 100] as $size)
+                                <option value="{{ request()->fullUrlWithQuery(['per_page' => $size, 'page' => 1]) }}" {{ $products->perPage() == $size ? 'selected' : '' }}>{{ $size }}</option>
+                            @endforeach
+                        </select>
+                        <span>dari {{ $products->total() }} barang</span>
                     </div>
-                @endif
+                    @if($products->hasPages())
+                        <div>{{ $products->links() }}</div>
+                    @endif
+                </div>
             @else
                 <x-ui.card>
                     <p class="py-12 text-center text-sm text-muted-foreground">Belum ada data barang.</p>

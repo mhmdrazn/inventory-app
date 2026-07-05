@@ -19,7 +19,7 @@ class DashboardController extends Controller
     {
         $totalStock = Product::sum('stock');
         $borrowedCount = BorrowingDetail::whereHas('borrowing', fn ($q) => $q->where('status', 'dipinjam'))->sum('quantity');
-        $availableStock = $totalStock - $borrowedCount;
+        $availableProductTypes = Product::where('stock', '>', 0)->count();
         $totalCategories = Category::count();
 
         // Peminjaman per bulan (12 bulan terakhir)
@@ -64,7 +64,7 @@ class DashboardController extends Controller
         return view('dashboard', compact(
             'totalStock',
             'borrowedCount',
-            'availableStock',
+            'availableProductTypes',
             'totalCategories',
             'chartLabels',
             'chartData',
